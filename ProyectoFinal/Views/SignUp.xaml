@@ -1,0 +1,68 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.SignUp"
+             NavigationPage.HasNavigationBar="False">
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <!-- Volver<Image/>-->
+            <Label Text="REGISTRO"/>
+        </StackLayout>
+
+        <StackLayout>
+            <Frame BackgroundColor="AntiqueWhite" Padding="5">
+                <Image x:Name="imgpersona" HeightRequest="200" WidthRequest="200"/>
+
+                <Frame.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="tomarfoto"></TapGestureRecognizer>
+                </Frame.GestureRecognizers>
+            </Frame>
+
+
+
+            <StackLayout>
+                <Label Text="Nombre Completo"/>
+                <Entry x:Name="txtnombrecompleto"/>
+            </StackLayout>
+
+
+
+            <StackLayout Orientation="Horizontal" Margin="0,100,0,0">
+                <StackLayout>
+                    <Label Text="Fecha de Nacimiento"/>
+                    <DatePicker x:Name="dtfechanacimiento" VerticalOptions="CenterAndExpand" />
+                    <!--Format="D"-->
+                </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Sexo"/>
+                    
+                    <Picker x:Name="pcksexo" Title="Seleccione un sexo">
+                        <!--TitleColor="Red"-->
+                        <Picker.ItemsSource>
+                            <x:Array Type="{x:Type x:String}">
+                                <x:String>Masculino</x:String>
+                                <x:String>Femenino</x:String>
+                            </x:Array>
+                        </Picker.ItemsSource>
+                    </Picker>
+                </StackLayout>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Dirección"/>
+                <Editor x:Name="txtdireccion" HeightRequest="100"/>
+            </StackLayout>
+
+
+
+            <Label Text="siguiente">
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goSingUp2"></TapGestureRecognizer>
+                </Label.GestureRecognizers>
+            </Label>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

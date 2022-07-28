@@ -1,0 +1,28 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.RecuperarContraseña"
+             NavigationPage.HasNavigationBar="False">
+    <StackLayout>
+        <Label Text="STAR BANK"/>
+
+
+
+        <StackLayout>
+            <Label Text="Enviaremos una clave de recuperación al correo electrónico asociado a tu cuenta:"/>
+            <Entry x:Name="txtemail" TextChanged="txtemail_TextChanged"/>
+        </StackLayout>
+
+
+
+        <Button IsEnabled="False" x:Name="btnenviarcontraseñat" Text="Enviar" Clicked="btnenviarcontraseñat_Clicked"/>
+
+
+
+        <Label Margin="0,100,0,0" Text="Volver">
+            <Label.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goLogIn"></TapGestureRecognizer>
+            </Label.GestureRecognizers>
+        </Label>
+    </StackLayout>
+</ContentPage>

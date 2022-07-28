@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.SignUp2"
+             NavigationPage.HasNavigationBar="False">
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <!-- flechita Volver en actionBar<Image/>-->
+            <Label Text="REGISTRO"/>
+        </StackLayout>
+
+        <StackLayout>
+            <StackLayout>
+                <Label Text="Número de identidad"/>
+                <Entry x:Name="txtnumeroidentidad"/>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Nombre de usuario"/>
+                <Entry x:Name="txtusuario"/>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Correo elecrónico"/>
+                <Entry x:Name="txtemail"/>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Contraseña"/>
+                <Entry x:Name="txtcontraseña"/>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Repetir contraseña"/>
+                <Entry x:Name="txtcontraseñarepetida"/>
+            </StackLayout>
+
+
+
+            <Button Text="Registrarme" Clicked="btnregistrarme"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>
