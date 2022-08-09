@@ -16,11 +16,14 @@ namespace ProyectoFinal.Views
     public partial class AdministracionCuenta : ContentPage
     {
         Cuenta pcuenta;
-        public AdministracionCuenta(Cuenta cuenta)
+        Usuario pusuario;
+
+        public AdministracionCuenta(Cuenta cuenta, Usuario usuario)
         {
             InitializeComponent();
 
             pcuenta = cuenta;
+            pusuario = usuario;
         }
 
         protected override async void OnAppearing()
@@ -29,8 +32,7 @@ namespace ProyectoFinal.Views
             txtmoneda.Text = pcuenta.Moneda;
             txtsaldo.Text = "" + pcuenta.Saldo;
             txtcodigocuenta.Text = pcuenta.CodigoCuenta;
-            //txtmesactual.Text = await obtenerMesUTC();
-            txtmesactual.Text = "Agosto";
+            txtmesactual.Text = await obtenerMesServidor();
             List <Transferencia> lista = await App.DBase.obtenerTransferenciasCuenta(1, pcuenta.CodigoCuenta);
 
             lista = Enumerable.Reverse(lista).ToList(); //Invierte la lista, la ultima transaccion hecha tiene que estar mas arriba
@@ -65,10 +67,11 @@ namespace ProyectoFinal.Views
             //[0] porque es el indice de los elementos seleccionados, como es seleccion unica (se configura como parametro en el xaml) siempre sera el indice [0]
         }
 
-        private async Task<string> obtenerMesUTC()
+        private async Task<string> obtenerMesServidor()
         {
-            string date = await HoraUniversal.getHoraUTC();
-            date = date.Substring(date.IndexOf("datetime") + 16, 2); //el primer valor es el indice del cual empieza a obtener el texto y el otro indice a donde termina la extraccion dentro del string (esta muy pulseado)
+            string date = await UsuarioApi.GetFechaServidor();
+
+            date = date.Substring(5, 2); //el primer valor es el indice del cual empieza a obtener el texto y el otro es la longitud de ahi en adelante a donde termina la extraccion dentro del string
 
             switch (date)
             {
@@ -121,6 +124,11 @@ namespace ProyectoFinal.Views
         private async void btnvolver_Clicked(object sender, EventArgs e)
         {
             await Navigation.PopAsync();
+        }
+
+        private async void btncontrolp_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new ControlPresupuestario(pusuario, pcuenta));
         }
     }
 }

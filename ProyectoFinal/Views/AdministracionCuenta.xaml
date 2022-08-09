@@ -28,7 +28,7 @@
 
 
 
-        <Button Text="Control Presupuestario"/>
+        <Button Text="Control Presupuestario" Clicked="btncontrolp_Clicked"/>
 
 
 

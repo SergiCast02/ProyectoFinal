@@ -21,6 +21,8 @@ namespace ProyectoFinal.Views
 
         protected async override void OnAppearing()
         {
+            chkrecordarc.IsChecked = true;
+
             try
             {
                 //PERSISTENCIA obtener
@@ -76,7 +78,8 @@ namespace ProyectoFinal.Views
                     {
                         if (usuario.Contraseña == txtcontraseña.Text)
                         {
-                            persistenciaSUsuario(usuario);
+                            if (chkrecordarc.IsChecked) { persistenciaSUsuario(1, usuario); }
+                            else { persistenciaSUsuario(2, usuario); }
 
                             await DisplayAlert("Aviso", "Bienvenido de vuelta: " + usuario.NombreCompleto, "OK");
                             await Navigation.PushAsync(new Tablero(usuario));
@@ -139,7 +142,8 @@ namespace ProyectoFinal.Views
 
                             if (!ciclo)
                             {
-                                persistenciaSUsuario(usuario);
+                                if (chkrecordarc.IsChecked) { persistenciaSUsuario(1, usuario); }
+                                else { persistenciaSUsuario(2, usuario); }
                                 await Navigation.PushAsync(new Tablero(usuario));
                             }
                         }
@@ -192,7 +196,8 @@ namespace ProyectoFinal.Views
 
                             if (!ciclo)
                             {
-                                persistenciaSUsuario(usuario);
+                                if (chkrecordarc.IsChecked) { persistenciaSUsuario(1, usuario); }
+                                else { persistenciaSUsuario(2, usuario); }
                                 await Navigation.PushAsync(new Tablero(usuario));
                             }
                         }
@@ -213,15 +218,25 @@ namespace ProyectoFinal.Views
             }
         }
 
-        public async void persistenciaSUsuario(Usuario usuario)
+        public async void persistenciaSUsuario(int op, Usuario usuario)
         {
+            string campo = "";
+            if (op == 1) { campo = ""+usuario.Id; }
+            if(op == 2) { campo = ""; }
+
             //PERSISTENCIA insertar
             var persistencia = new Persistencia
             {
                 Id = 1,
-                Campo = "" + usuario.Id
+                Campo = campo
             }; //1 porque es Usuario (ver más en Persistencia.cs)
             var estado = await App.DBase.PersistenciaSave(persistencia);
+        }
+
+        private void lblrecuperarc_Tapped(object sender, EventArgs e)
+        {
+            if (chkrecordarc.IsChecked) { chkrecordarc.IsChecked = false; }
+            else { chkrecordarc.IsChecked = true; }
         }
     }
 }

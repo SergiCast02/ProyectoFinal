@@ -100,5 +100,27 @@ namespace ProyectoFinal.Api
             }
             return false;
         }
+
+
+
+        public static async Task<string> GetFechaServidor()
+        {
+            try
+            {
+                var uri = new Uri(URL_SITIOS + "obtenerfecha.php");
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    return response.Content.ReadAsStringAsync().Result;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return null;
+        }
     }
 }

@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 
 using ProyectoFinal.Models;
 using System.Net.Mail;
+using ProyectoFinal.Api;
 
 namespace ProyectoFinal.Views
 {
@@ -17,6 +18,7 @@ namespace ProyectoFinal.Views
     {
         Usuario pusuario;
         Cuenta pcuenta;
+        Dolar pdolar;
 
         public Transferencias(Usuario usuario)
         {
@@ -30,6 +32,9 @@ namespace ProyectoFinal.Views
             concepto.IsEnabled = false;
             chkcorreo.IsEnabled = false;
             btntransferir.IsEnabled = false;
+
+            monedaconversion.Text = "HNL";
+            valorconversion.Text = "0.00";
         }
 
         public Transferencias(Usuario usuario, Cuenta cuenta)
@@ -54,6 +59,24 @@ namespace ProyectoFinal.Views
 
             //Tipo de moneda en el entry monto dependiendo de la moneda de la cuenta
             monto.Placeholder = monto.Placeholder + " (" + cuenta.Moneda + ")";
+
+
+            if (pcuenta.Moneda == "HNL")
+            {
+                monedaconversion.Text = "USD";
+            }
+            else
+            {
+                monedaconversion.Text = "HNL";
+            }
+
+            valorconversion.Text = "0.00";
+        }
+
+        protected override async void OnAppearing()
+        {
+            var precio = await PrecioDolar.GetPrecioDolar(await UsuarioApi.GetFechaServidor());
+            pdolar = precio;
         }
 
         private async void btntransferir_Clicked(object sender, EventArgs e)
@@ -150,5 +173,26 @@ namespace ProyectoFinal.Views
             }
         }
         #endregion
+
+        private void monto_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if(monto.Text != "" && monto.Text != null)
+            {
+                if (pcuenta.Moneda == "HNL")
+                {
+                    string valor = string.Format("{0:C}", (double.Parse(monto.Text) / pdolar.Compra));
+                    valorconversion.Text = valor.Replace("$", string.Empty);
+                }
+                else
+                {
+                    string valor = string.Format("{0:C}", (double.Parse(monto.Text) * pdolar.Precio));
+                    valorconversion.Text = valor.Replace("$", string.Empty);
+                }
+            }
+            else
+            {
+                valorconversion.Text = "0.00";
+            }
+        }
     }
 }

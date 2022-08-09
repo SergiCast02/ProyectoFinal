@@ -9,51 +9,72 @@
             <Label Text="ADMINISTRACIÓN DE CUENTAS"/>
         </StackLayout>
 
-        <StackLayout>
-            <Label Text="Cuenta a debitar:"/>
+        <ScrollView>
 
-            
-            
-            <StackLayout x:Name="cardcuenta" IsVisible="false" BackgroundColor="#008573">
+            <StackLayout>
+
                 <StackLayout>
-                    <Label Text="Cuenta de ahorros"/>
-                    <Label x:Name="codigocuenta"/>
-                </StackLayout>
+                    <Label Text="Cuenta a debitar:"/>
 
-                <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
-                    <Image Source="piggybank.png" HeightRequest="50" Margin="0,0,0,20"/>
 
-                    <StackLayout>
-                        <Label Text="Saldo disponible"/>
-                        <StackLayout Orientation="Horizontal">
-                            <Label x:Name="moneda"/>
-                            <Label x:Name="saldo"/>
+
+                    <StackLayout x:Name="cardcuenta" IsVisible="false" BackgroundColor="#008573">
+                        <StackLayout>
+                            <Label Text="Cuenta de ahorros"/>
+                            <Label x:Name="codigocuenta"/>
+                        </StackLayout>
+
+                        <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
+                            <Image Source="piggybank.png" HeightRequest="50" Margin="0,0,0,20"/>
+
+                            <StackLayout>
+                                <Label Text="Saldo disponible"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label x:Name="moneda"/>
+                                    <Label x:Name="saldo"/>
+                                </StackLayout>
+                            </StackLayout>
                         </StackLayout>
                     </StackLayout>
+
+
+
+                    <Button Text="Seleccionar cuenta" Clicked="btnscuenta_Clicked"/>
                 </StackLayout>
+
+                <StackLayout>
+                    <Label Text="Cuenta que recibe:"/>
+                    <Entry x:Name="cuentaa" Placeholder="Digite aqui la cuenta del acreditante"/>
+                </StackLayout>
+
+
+
+                <StackLayout>
+                    <Label Text="Detalles de la transacción:"/>
+                    <StackLayout Orientation="Horizontal">
+                        <Entry x:Name="monto" TextChanged="monto_TextChanged" Placeholder="Monto a transferir" Keyboard="Numeric"/>
+                        <Frame CornerRadius="10">
+                            <StackLayout>
+                                <Label Text="Conversión"/>
+                                <StackLayout Orientation="Horizontal">
+                                    <Label x:Name="monedaconversion" FontAttributes="Bold"/>
+                                    <Label x:Name="valorconversion"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
+                    <Entry x:Name="concepto" Placeholder="Concepto (breve descripción)"/>
+                    <StackLayout Orientation="Horizontal">
+                        <CheckBox x:Name="chkcorreo"/>
+                        <Label Text="Enviar copia de la transferencia a tu correo"/>
+                    </StackLayout>
+                </StackLayout>
+
+                <Button x:Name="btntransferir" Clicked="btntransferir_Clicked" Text="TRANSFERIR"/>
+
             </StackLayout>
             
-            
-
-            <Button Text="Seleccionar cuenta" Clicked="btnscuenta_Clicked"/>
-        </StackLayout>
-
-        <StackLayout>
-            <Label Text="Cuenta que recibe:"/>
-            <Entry x:Name="cuentaa" Placeholder="Digite aqui la cuenta del acreditante"/>
-        </StackLayout>
-
-        <StackLayout>
-            <Label Text="Detalles de la transacción:"/>
-            <Entry x:Name="monto" Placeholder="Monto a transferir"/>
-            <Entry x:Name="concepto" Placeholder="Concepto (breve descripción)"/>
-            <StackLayout Orientation="Horizontal">
-                <CheckBox x:Name="chkcorreo"/>
-                <Label Text="Enviar copia de la transferencia a tu correo"/>
-            </StackLayout>
-        </StackLayout>
-
-        <Button x:Name="btntransferir" Clicked="btntransferir_Clicked" Text="TRANSFERIR"/>
+        </ScrollView>
 
     </StackLayout>
     

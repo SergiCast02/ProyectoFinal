@@ -45,6 +45,36 @@
 
 
 
+        <StackLayout Margin="0,25,0,25">
+            <Label Text="Precio del dólar estadounidense" HorizontalOptions="Center"/>
+
+            <StackLayout Orientation="Horizontal" HorizontalOptions="CenterAndExpand">
+
+                <Frame CornerRadius="10" HorizontalOptions="Center">
+                    <StackLayout>
+                        <Label Text="Compra"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="HNL " FontAttributes="Bold"/>
+                            <Label x:Name="preciodolarc"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+                <Frame CornerRadius="10" HorizontalOptions="Center">
+                    <StackLayout>
+                        <Label Text="Venta"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="HNL " FontAttributes="Bold"/>
+                            <Label x:Name="preciodolarv"/>
+                        </StackLayout>
+                    </StackLayout>
+                </Frame>
+
+            </StackLayout>
+        </StackLayout>
+
+
+
         <Button Text="Administración de Cuentas"
                 
                 Clicked="btncuentas_Clicked"/>

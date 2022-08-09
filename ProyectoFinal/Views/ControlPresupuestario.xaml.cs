@@ -14,12 +14,21 @@ namespace ProyectoFinal.Views
     public partial class ControlPresupuestario : ContentPage
     {
         Usuario pusuario;
+        Cuenta pcuenta;
 
         public ControlPresupuestario(Usuario usuario)
         {
             InitializeComponent();
 
             pusuario = usuario;
+        }
+
+        public ControlPresupuestario(Usuario usuario, Cuenta cuenta)
+        {
+            InitializeComponent();
+
+            pusuario = usuario;
+            pcuenta = cuenta;
         }
 
         protected async override void OnAppearing()
@@ -46,15 +55,17 @@ namespace ProyectoFinal.Views
                 if (cuentas.Count != 3) //el elemento Todas es el primer elemento de la lista y suma
                 {
                     cuentas.Remove("Todas");
-                    iselected = 0;
+                    iselected = 0; //Siempre quedara escogida la primer cuenta creada al aparecer la pagina
                 }
                 else
                 {
-                    iselected = 1;
+                    iselected = 1; //Siempre quedara escogida la primer cuenta creada al aparecer la pagina
                 }
 
                 pckccuenta.ItemsSource = cuentas;
                 pckccuenta.SelectedItem = cuentas[iselected];
+
+                if(pcuenta != null) { pckccuenta.SelectedItem = pcuenta.CodigoCuenta; }
             }
         }
 

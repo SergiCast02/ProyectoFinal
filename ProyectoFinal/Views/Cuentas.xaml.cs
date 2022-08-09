@@ -67,7 +67,7 @@ namespace ProyectoFinal.Views
 
             if (operacion == 0)
             {
-                await Navigation.PushAsync(new AdministracionCuenta(cuenta));
+                await Navigation.PushAsync(new AdministracionCuenta(cuenta, pusuario));
             }
             else if (operacion == 1)
             {

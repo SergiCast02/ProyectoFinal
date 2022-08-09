@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ProyectoFinal.Models;
+using ProyectoFinal.Api;
 
 namespace ProyectoFinal.Views
 {
@@ -14,6 +15,8 @@ namespace ProyectoFinal.Views
     public partial class Tablero : ContentPage
     {
         Usuario pusuario;
+        Dolar pdolar;
+
         public Tablero(Usuario usuario)
         {
             InitializeComponent();
@@ -23,11 +26,22 @@ namespace ProyectoFinal.Views
             imgusuario.Source = ImageSource.FromStream(() => new System.IO.MemoryStream(usuario.Fotografia));
             txtnombrecompleto.Text = usuario.NombreCompleto;
             txtnombreusuario.Text = usuario.NombreUsuario;
+
+
         }
 
         protected override bool OnBackButtonPressed()
         {
             return true;
+        }
+
+        protected override async void OnAppearing()
+        {
+            var precio = await PrecioDolar.GetPrecioDolar(await UsuarioApi.GetFechaServidor());
+            preciodolarc.Text = string.Format("{0:f4}", precio.Compra);
+            preciodolarv.Text = string.Format("{0:f4}", precio.Venta);
+
+            pdolar = precio;
         }
 
         private async void btncuentas_Clicked(object sender, EventArgs e)
