@@ -29,6 +29,10 @@
             HasShadow="True">
 
             <Image x:Name="imgusuario" Aspect="AspectFill"/>
+
+            <Frame.GestureRecognizers>
+                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="perfil_Tapped"/>
+            </Frame.GestureRecognizers>
         </Frame>
 
 

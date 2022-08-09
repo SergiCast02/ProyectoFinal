@@ -63,5 +63,10 @@ namespace ProyectoFinal.Views
 
             if (respuesta) { await Navigation.PushAsync(new LogIn()); }
         }
+
+        private async void perfil_Tapped(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Perfil(pusuario));
+        }
     }
 }
