@@ -1,0 +1,64 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.Servicio">
+    <StackLayout BackgroundColor="#121D40">
+
+        <StackLayout Orientation="Horizontal" BackgroundColor="#465173">
+            <!-- Volver<Image/>-->
+            <Label Text="ADMINISTRACIÓN DE CUENTAS"/>
+        </StackLayout>
+
+        <StackLayout Orientation="Horizontal">
+            <StackLayout>
+                <Label x:Name="txttitulo"/>
+                <Label x:Name="txtdescripcion"/>
+            </StackLayout>
+
+            <Image x:Name="imgservicio" WidthRequest="100"/>
+        </StackLayout>
+
+        
+        
+        <StackLayout>
+            <StackLayout BackgroundColor="#465173">
+                <Label Text="Detalles de la transferencia:" TextColor="#F2F2F2"/>
+            </StackLayout>
+
+            <StackLayout Orientation="Horizontal">
+                <StackLayout>
+                    <Label Text="ID de cliente:"/>
+                    <Entry x:Name="idcliente" IsEnabled="False"/>
+                </StackLayout>
+
+                <Button Text="buscar detalles" Clicked="bdetalles_Clicked"/>
+            </StackLayout>
+
+            
+
+            <StackLayout>
+                <Label Text="Monto a debitar"/>
+                
+                <StackLayout>
+                    <Label x:Name="lblmoneda"/>
+                    <Entry x:Name="adebitar" IsEnabled="False"/>
+                </StackLayout>
+            </StackLayout>
+
+            
+
+
+            <Button x:Name="btntransferir" IsEnabled="False" Text="Realizar Transferencia"/>
+        </StackLayout>
+
+
+
+
+        <Button Clicked="btnvolver_Clicked"
+                x:Name="btnvolver"
+                Text="VOLVER"
+                BackgroundColor="#9297A6"
+                TextColor="#F2F2F2"/>
+
+    </StackLayout>
+</ContentPage>

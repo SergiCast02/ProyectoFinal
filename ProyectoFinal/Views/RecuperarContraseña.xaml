@@ -10,7 +10,7 @@
 
         <StackLayout>
             <Label Text="Enviaremos una clave de recuperación al correo electrónico asociado a tu cuenta:"/>
-            <Entry x:Name="txtemail" TextChanged="txtemail_TextChanged"/>
+            <Entry x:Name="txtemail" TextChanged="txtemail_TextChanged" Keyboard="Email"/>
         </StackLayout>
 
 

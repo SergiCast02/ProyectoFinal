@@ -18,7 +18,7 @@
 
         <StackLayout>
             <Label Text="Contraseña"/>
-            <Entry x:Name="txtcontraseña"/>
+            <Entry x:Name="txtcontraseña" IsPassword="True"/>
             <Label Margin="0,100,0,0" Text="Olvidé mi contraseña">
                 <Label.GestureRecognizers>
                     <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goRecuperarContraseña"></TapGestureRecognizer>

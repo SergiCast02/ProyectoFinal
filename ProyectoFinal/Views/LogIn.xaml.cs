@@ -59,6 +59,15 @@ namespace ProyectoFinal.Views
         {
             try
             {
+                if(txtusuario.Text == null || txtusuario.Text == "") { await DisplayAlert("Aviso", "Ingrese un usuario", "OK"); return; }
+            }
+            catch(Exception error)
+            {
+                
+            }
+
+            try
+            {
                 var usuario = await App.DBase.obtenerUsuario(2, txtusuario.Text);
 
                 if (usuario != null)

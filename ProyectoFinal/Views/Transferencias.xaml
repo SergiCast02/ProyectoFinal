@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.Transferencias">
+    
+    <StackLayout>
+        <StackLayout Orientation="Horizontal" BackgroundColor="#465173">
+            <!-- Volver<Image/>-->
+            <Label Text="ADMINISTRACIÓN DE CUENTAS"/>
+        </StackLayout>
+
+        <StackLayout>
+            <Label Text="Cuenta a debitar:"/>
+
+            
+            
+            <StackLayout x:Name="cardcuenta" IsVisible="false" BackgroundColor="#008573">
+                <StackLayout>
+                    <Label Text="Cuenta de ahorros"/>
+                    <Label x:Name="codigocuenta"/>
+                </StackLayout>
+
+                <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
+                    <Image Source="piggybank.png" HeightRequest="50" Margin="0,0,0,20"/>
+
+                    <StackLayout>
+                        <Label Text="Saldo disponible"/>
+                        <StackLayout Orientation="Horizontal">
+                            <Label x:Name="moneda"/>
+                            <Label x:Name="saldo"/>
+                        </StackLayout>
+                    </StackLayout>
+                </StackLayout>
+            </StackLayout>
+            
+            
+
+            <Button Text="Seleccionar cuenta" Clicked="btnscuenta_Clicked"/>
+        </StackLayout>
+
+        <StackLayout>
+            <Label Text="Cuenta que recibe:"/>
+            <Entry x:Name="cuentaa" Placeholder="Digite aqui la cuenta del acreditante"/>
+        </StackLayout>
+
+        <StackLayout>
+            <Label Text="Detalles de la transacción:"/>
+            <Entry x:Name="monto" Placeholder="Monto a transferir"/>
+            <Entry x:Name="concepto" Placeholder="Concepto (breve descripción)"/>
+            <StackLayout Orientation="Horizontal">
+                <CheckBox x:Name="chkcorreo"/>
+                <Label Text="Enviar copia de la transferencia a tu correo"/>
+            </StackLayout>
+        </StackLayout>
+
+        <Button x:Name="btntransferir" Clicked="btntransferir_Clicked" Text="TRANSFERIR"/>
+
+    </StackLayout>
+    
+</ContentPage>

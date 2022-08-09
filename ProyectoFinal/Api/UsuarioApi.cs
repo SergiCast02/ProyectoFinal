@@ -13,7 +13,7 @@ namespace ProyectoFinal.Api
         private static readonly string URL_SITIOS = "https://pm2examen2.000webhostapp.com/apiproyecto/";
         private static HttpClient client = new HttpClient();
 
-        public static async Task<List<Usuario>> GetAllSite()
+        public static async Task<List<Usuario>> GetAllUsuarios()
         {
             List<Usuario> ListaUsuarios = new List<Usuario>();
             try
@@ -36,7 +36,7 @@ namespace ProyectoFinal.Api
             return ListaUsuarios;
         }
 
-        public async static Task<bool> DeleteSite(string id)
+        public async static Task<bool> DeleteUsuario(string id)
         {
             try
             {
@@ -80,7 +80,7 @@ namespace ProyectoFinal.Api
         }
 
 
-        public async static Task<bool> UpdateSitio(Usuario sitio)
+        public async static Task<bool> UpdateUsuario(Usuario sitio)
         {
             try
             {

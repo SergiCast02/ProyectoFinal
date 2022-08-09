@@ -11,6 +11,7 @@ using System.Net.Mail;
 
 using ProyectoFinal.Models;
 using ProyectoFinal.Api;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoFinal.Views
 {
@@ -29,6 +30,48 @@ namespace ProyectoFinal.Views
 
         private async void btnregistrarme(object sender, EventArgs e)
         {
+
+            try
+            {
+                if (txtnumeroidentidad.Text == null || txtnumeroidentidad.Text == "")
+                {
+                    await DisplayAlert("Aviso", "Su número de identidad es requerido para poder aperturar su cuenta de usuario", "OK"); return;
+                }else if(txtnumeroidentidad.Text.Length < 13)
+                {
+                    await DisplayAlert("Aviso", "El número de identidad no está escrito correctamente.\n\nFaltan dígitos", "OK"); return;
+                }
+
+                if (txtusuario.Text == null || txtusuario.Text == "")
+                {
+                    await DisplayAlert("Aviso", "Su nombre de usuario es requerido para poder aperturar su cuenta de usuario", "OK"); return;
+                }
+
+                if (txtemail.Text == null || txtemail.Text == "")
+                {
+                    await DisplayAlert("Aviso", "Ingrese su correo electrónico para poder aperturar su cuenta de usuario.\n\nEnviaremos un código de verificación a este correo que usted ingrese.", "OK"); return;
+                }else if(!validateEmail(txtemail.Text))
+                {
+                    await DisplayAlert("Aviso", "El correo electrónico que ha ingresado no es válido", "OK"); return;
+                }
+
+                if (txtcontraseña.Text == null || txtcontraseña.Text == "")
+                {
+                    await DisplayAlert("Aviso", "Debe ingresar una contraseña para completar el registro.", "OK"); return;
+                }
+                else
+                {
+                    if (txtcontraseña.Text.Length < 8) { await DisplayAlert("Aviso", "La contraseña debe tener por lo menos 8 caractéres", "OK"); return; }
+                    else if (txtcontraseña.Text != txtcontraseñarepetida.Text) { await DisplayAlert("Aviso", "Repite tu contraseña correctamente para finalizar el registro.", "OK"); return; }
+                }
+
+            }
+            catch (Exception error)
+            {
+                Console.WriteLine(error);
+                return;
+            }
+
+            btnregistrar.IsEnabled = false;
             //enviarcorreo();
             usuariocompleto.NumeroIdentidad = txtnumeroidentidad.Text;
             usuariocompleto.NombreUsuario = txtusuario.Text;
@@ -36,15 +79,31 @@ namespace ProyectoFinal.Views
             usuariocompleto.Contraseña = txtcontraseña.Text;
 
             //Añadimos Codigo Temporal a Usuario
-            usuariocompleto.CodigoVerificacion = CodigoAleatorio();
+            usuariocompleto.CodigoVerificacion = CodigoAleatorio(1);
+
+            //Validacion que el id de cliente no venga repetido y se asigna
+            bool ciclo = true;
+            while (ciclo)
+            {
+                var idcliente = CodigoAleatorio(2);
+                if (await App.DBase.obtenerUsuario(4, idcliente) == null)
+                {
+                    usuariocompleto.IdCliente = idcliente;
+                    break;
+                }
+            }
+
 
             try
             {
                 //SQLITE
                 var usuariosqlite = await App.DBase.obtenerUsuario(2, usuariocompleto.NombreUsuario);
 
-                if(usuariosqlite == null)
+                if (usuariosqlite == null)
                 {
+                    //guardar en API
+                    bool apiresult = await UsuarioApi.CreateUsuario(usuariocompleto);
+                    //guardar en SQLite
                     var result = await App.DBase.UsuarioSave(usuariocompleto);
                     persistenciaSUsuario(usuariocompleto);
                     enviarcorreo(usuariocompleto);
@@ -67,16 +126,26 @@ namespace ProyectoFinal.Views
 
             /*bool estado = await UsuarioApi.CreateUsuario(usuariocompleto);
             if (estado) { await DisplayAlert("Aviso", "Usuario adicionado con éxito", "OK"); }*/
+            
         }
 
-        string CodigoAleatorio()
+        string CodigoAleatorio(int op)
         {
+            //op = 1 codigo verificacion
+            //op = 2 id cliente
+
             Random rdn = new Random();
             //string caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890%$#@";
-            string caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890%$#@";
+
+            string caracteres = "";
+            int longitudContrasenia = 0;
+
+            if (op == 1) { caracteres = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890%$#@"; longitudContrasenia = 6; }
+            if (op == 2) { caracteres = "1234567890"; longitudContrasenia = 6; }
+
             int longitud = caracteres.Length;
             char letra;
-            int longitudContrasenia = 6;
+            longitudContrasenia = 6;
             string contraseniaAleatoria = string.Empty;
             for (int i = 0; i < longitudContrasenia; i++)
             {
@@ -86,31 +155,23 @@ namespace ProyectoFinal.Views
             return contraseniaAleatoria;
         }
 
-        #region SendEmail (abre la aplicación de Gmail como borrador)
-        public async Task SendEmail(string subject, string body, List<string> recipients)
+        static bool validateEmail(string email)
         {
-            try
+            if (email == null)
             {
-                var message = new EmailMessage
-                {
-                    Subject = subject,
-                    Body = body,
-                    To = recipients,
-                    //Cc = ccRecipients,
-                    //Bcc = bccRecipients
-                };
-                await Email.ComposeAsync(message);
+                return false;
             }
-            catch (FeatureNotSupportedException fbsEx)
+            if (new EmailAddressAttribute().IsValid(email))
             {
-                // Email is not supported on this device
+                return true;
             }
-            catch (Exception ex)
+            else
             {
-                // Some other exception occurred
+
+                return false;
             }
         }
-        #endregion
+
         #region Enviar e-mail
         void enviarcorreo(Usuario usuariocompleto)
         {
@@ -123,6 +184,7 @@ namespace ProyectoFinal.Views
                 mail.To.Add(usuariocompleto.Email);
                 mail.Subject = "STARBANK | Código de verificación";
                 mail.Body = "¡Hola <b>"+usuariocompleto.NombreCompleto+"</b>, Gracias por elegir STARBANK.\n\nEste es tu código de verificación: "+usuariocompleto.CodigoVerificacion;
+                mail.IsBodyHtml = true;
                 SmtpServer.Port = 587;
                 SmtpServer.Host = "smtp.gmail.com";
                 SmtpServer.EnableSsl = true;
@@ -145,8 +207,15 @@ namespace ProyectoFinal.Views
             {
                 Id = 1,
                 Campo = "" + usuario.Id
-            }; //1 porque es Usuario (ver más en Persistencia.cs)
+            }; //1 porque es Usuario (ver má
+               //s en Persistencia.cs)
             var estado = await App.DBase.PersistenciaSave(persistencia);
+        }
+
+        private async void btninicio_Clicked(object sender, EventArgs e)
+        {
+            Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+            await Navigation.PopAsync();
         }
     }
 }

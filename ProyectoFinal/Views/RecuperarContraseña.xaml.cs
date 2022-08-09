@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 using ProyectoFinal.Models;
 using System.Net.Mail;
 using Acr.UserDialogs;
+using System.ComponentModel.DataAnnotations;
 
 namespace ProyectoFinal.Views
 {
@@ -28,6 +29,15 @@ namespace ProyectoFinal.Views
 
         private async void btnenviarcontraseñat_Clicked(object sender, EventArgs e)
         {
+            if (txtemail.Text == null || txtemail.Text == "")
+            {
+                await DisplayAlert("Aviso", "Ingrese el correo electrónico ligado a su cunta para poder recuperarla", "OK"); return;
+            }
+            else if (!validateEmail(txtemail.Text))
+            {
+                await DisplayAlert("Aviso", "El correo electrónico que ha ingresado no es válido", "OK"); return;
+            }
+
             var usuario = await App.DBase.obtenerUsuario(3, txtemail.Text);
             if (usuario != null)
             {
@@ -51,6 +61,23 @@ namespace ProyectoFinal.Views
             
         }
 
+        static bool validateEmail(string email)
+        {
+            if (email == null)
+            {
+                return false;
+            }
+            if (new EmailAddressAttribute().IsValid(email))
+            {
+                return true;
+            }
+            else
+            {
+
+                return false;
+            }
+        }
+
         #region Enviar e-mail
         void enviarcorreo(Usuario user)
         {
@@ -62,7 +89,7 @@ namespace ProyectoFinal.Views
                 mail.From = new MailAddress("starbankteam@gmail.com");
                 mail.To.Add(user.Email);
                 mail.Subject = "STARBANK | Código de verificación";
-                mail.Body = "<html><body><p>¡Hola <b>" + user.NombreCompleto + "!</b></p><br><br><p>Gracias por elegir STARBANK.</p><br><br><p>Esta es tu contraseña temporal: <b>"+user.ContraseñaTemporal+"<b></p><br><p>Con ella ingresarás a la aplicación STARBANK y se te solicitará que escribas una contraseña nueva la cual <b>será tu nueva contraseña.</b></p></body></html>";
+                mail.Body = "<html><body><p>¡Hola <b>" + user.NombreCompleto + "!</b></p><br><br><p>Gracias por elegir STARBANK.</p><br><br><p>Esta es tu contraseña temporal: <b>"+user.ContraseñaTemporal+"<b></p><br><p>Con ella ingresarás a la aplicación STARBANK y se te solicitará que escribas una contraseña nueva la cual <b>será tu nueva contraseña.</b></p><br<br><p>Si tú no has solicitado este cambio de contraseña puedes ignorar este correo electrónico.</p></body></html>";
                 mail.IsBodyHtml = true; 
                 SmtpServer.Port = 587;
                 SmtpServer.Host = "smtp.gmail.com";

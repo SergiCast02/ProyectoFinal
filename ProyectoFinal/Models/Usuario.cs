@@ -32,5 +32,7 @@ namespace ProyectoFinal.Models
         public string CodigoVerificacion { get; set; }
         [JsonProperty("clavet")]
         public string ContraseñaTemporal { get; set; }
+        [JsonProperty("idcliente")]
+        public string IdCliente { get; set; }
     }
 }

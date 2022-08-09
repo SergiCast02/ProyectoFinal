@@ -12,7 +12,7 @@
         <StackLayout>
             <StackLayout>
                 <Label Text="Número de identidad"/>
-                <Entry x:Name="txtnumeroidentidad"/>
+                <Entry x:Name="txtnumeroidentidad" MaxLength="13" Keyboard="Numeric"/>
             </StackLayout>
 
 
@@ -25,27 +25,31 @@
 
 
             <StackLayout>
-                <Label Text="Correo elecrónico"/>
-                <Entry x:Name="txtemail"/>
+                <Label Text="Correo electrónico"/>
+                <Entry x:Name="txtemail" Keyboard="Email"/>
             </StackLayout>
 
 
 
             <StackLayout>
                 <Label Text="Contraseña"/>
-                <Entry x:Name="txtcontraseña"/>
+                <Entry x:Name="txtcontraseña" IsPassword="True"/>
             </StackLayout>
 
 
 
             <StackLayout>
                 <Label Text="Repetir contraseña"/>
-                <Entry x:Name="txtcontraseñarepetida"/>
+                <Entry x:Name="txtcontraseñarepetida" IsPassword="True"/>
             </StackLayout>
 
 
 
-            <Button Text="Registrarme" Clicked="btnregistrarme"/>
+            <Button x:Name="btnregistrar" Text="Registrarme" Clicked="btnregistrarme"/>
+
+
+
+            <Button Text="Volver a Inicio" Clicked="btninicio_Clicked"/>
         </StackLayout>
     </StackLayout>
 </ContentPage>

@@ -4,6 +4,13 @@
              x:Class="ProyectoFinal.Views.Tablero"
              xmlns:Converters="clr-namespace:ProyectoFinal.Converters"
              NavigationPage.HasNavigationBar="False">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <Converters:ByteArrayToImage x:Key="ByteToImage"/>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+    
     <StackLayout>
 
         <StackLayout>
@@ -12,7 +19,50 @@
 
 
 
-        <Image/>
+        <!--<Image x:Name="imgusuario" Source="{Binding foto, Converter={StaticResource ByteToImage}}"/>-->
+        <Frame
+            CornerRadius="100"
+            WidthRequest="150"
+            HeightRequest="150"
+            HorizontalOptions="Center"
+            Padding="0"
+            HasShadow="True">
+
+            <Image x:Name="imgusuario" Aspect="AspectFill"/>
+        </Frame>
+
+
+
+        <Label x:Name="txtnombrecompleto"/>
+
+
+
+        <Label x:Name="txtnombreusuario" FontAttributes="Bold"/>
+
+
+
+        <Button Text="Administración de Cuentas"
+                
+                Clicked="btncuentas_Clicked"/>
+        
+        <Button Text="Pagar Servicios" Clicked="btnservicios_Clicked"/>
+        <Button Text="Transferencias" Clicked="btntransferencias_Clicked"/>
+        <Button Text="Control Presupuestario" Clicked="btncontrolp_Clicked"/>
+
+
+
+        <StackLayout HeightRequest="50" Orientation="Horizontal" BackgroundColor="#9297A6">
+            <ImageButton Clicked="btnsoporte_Clicked"
+                         
+                         Source="customerservice.png"
+                         HorizontalOptions="CenterAndExpand"
+                         BackgroundColor="Transparent"/>
+            <ImageButton Clicked="btnlogout_Clicked"
+                         
+                         Source="logout.png"
+                         HorizontalOptions="CenterAndExpand"
+                         BackgroundColor="Transparent"/>
+        </StackLayout>
     </StackLayout>
 
 

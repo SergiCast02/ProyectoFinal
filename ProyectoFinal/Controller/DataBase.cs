@@ -18,6 +18,9 @@ namespace ProyectoFinal.Controller
             // Crearemos las tablas de la base de datos
             dbase.CreateTableAsync<Usuario>(); // Creando la tabla de Usuarios
             dbase.CreateTableAsync<Persistencia>(); // Creando la tabla de Persistencia
+            dbase.CreateTableAsync<Cuenta>(); // Creando la tabla de Cuentas (dinero)
+            dbase.CreateTableAsync<Transferencia>(); // Creando la tabla de Transferencias
+            dbase.CreateTableAsync<Cliente>(); // Creando la tabla de Cliente
         }
 
         #region Usuario
@@ -47,8 +50,9 @@ namespace ProyectoFinal.Controller
             //1 Obtener usuario por ID
             //2 Obtener usuario por nombre de usuario
             //3 Obtener usuario por correo electrónico
+            //4 obtener usuario por id de cliente
 
-            
+
 
             switch (operacion)
             {
@@ -64,6 +68,10 @@ namespace ProyectoFinal.Controller
                 case 3:
                     return dbase.Table<Usuario>()
                     .Where(i => i.Email == dato)
+                    .FirstOrDefaultAsync();
+                case 4:
+                    return dbase.Table<Usuario>()
+                    .Where(i => i.IdCliente == dato)
                     .FirstOrDefaultAsync();
             }
 
@@ -83,8 +91,6 @@ namespace ProyectoFinal.Controller
         }
 
         #endregion
-
-
 
         #region Persistencia
         public async Task<int> PersistenciaSave(Persistencia persistencia)
@@ -121,6 +127,157 @@ namespace ProyectoFinal.Controller
         {
             return dbase.DropTableAsync<Persistencia>();
         }
+        #endregion
+
+        #region Cuenta
+        public async Task<int> CuentaSave(int operacion, Cuenta cuenta)
+        {
+            //1 Save
+            //2 Update
+
+            //RETURNS
+            //2 ya existe una cuenta con ese codigo de cuenta
+            //3 el usuario ya tiene 2 cuentas, no puede crear más
+
+            switch (operacion)
+            {
+                case 1:
+                    if(await obtenerCuenta(cuenta.CodigoCuenta) == null)
+                    {
+                        /*List<Cuenta> cuentas = new List<Cuenta>();
+                        cuentas = await obtenerCuentasUsuario(cuenta.CodigoUsuario);
+
+                        if(cuentas.Count >= 2)
+                        {
+                            return 3;
+                        }
+                        else
+                        {
+                            return await dbase.InsertAsync(cuenta);
+                        }*/
+
+                        return await dbase.InsertAsync(cuenta);
+                    }
+                    else
+                    {
+                        return 2;
+                    }
+                case 2:
+                    return await dbase.UpdateAsync(cuenta); // Update
+            }
+
+            return 0;
+        }
+
+        // Read
+        public Task<List<Cuenta>> obtenerListaCuenta()
+        {
+            return dbase.Table<Cuenta>().ToListAsync();
+        }
+
+        // Read un registro
+        public Task<Cuenta> obtenerCuenta(string ccuenta)
+        {
+            return dbase.Table<Cuenta>()
+                    .Where(i => i.CodigoCuenta == ccuenta)
+                    .FirstOrDefaultAsync();
+        }
+
+        // Trae las cuentas ligadas a un Id de Usuario
+        public Task<List<Cuenta>> obtenerCuentasUsuario(int uid)
+        {
+            return dbase.Table<Cuenta>()
+                    .Where(i => i.CodigoUsuario == uid)
+                    .ToListAsync();
+        }
+
+        // Delete
+        public Task<int> CuentaDelete(Cuenta cuenta)
+        {
+            return dbase.DeleteAsync(cuenta);
+        }
+
+        //Delete ALL
+        public Task<int> CuentaDeleteAll()
+        {
+            return dbase.DropTableAsync<Cuenta>();
+        }
+
+        #endregion
+
+        #region Transferencia
+        public Task<int> TransferenciaSave(Transferencia transferencia)
+        {
+            return dbase.InsertAsync(transferencia);
+        }
+
+        // Read un registro
+        public Task<Transferencia> obtenerTransferencia(int tid)
+        {
+            return dbase.Table<Transferencia>()
+                    .Where(i => i.Id == tid)
+                    .FirstOrDefaultAsync();
+        }
+
+        // Trae las transferencias ligadas a un Codigo de Cuenta
+        public Task<List<Transferencia>> obtenerTransferenciasCuenta(int op, string codigocuenta)
+        {
+            //1 Todos
+            //2 Créditos
+            //3 Débitos
+
+            switch (op)
+            {
+                case 1:
+                    return dbase.Table<Transferencia>()
+                .Where(i => i.Envia == codigocuenta || i.Recibe == codigocuenta)
+                .ToListAsync();
+                case 2:
+                    return dbase.Table<Transferencia>()
+                .Where(i => i.Recibe == codigocuenta)
+                .ToListAsync();
+                case 3:
+                    return dbase.Table<Transferencia>()
+                .Where(i => i.Envia == codigocuenta)
+                .ToListAsync();
+            }
+
+            return null;
+        }
+
+        // Trae las transferencias ligadas a una lista con Codigos de Cuenta
+        public async Task<List<Transferencia>> obtenerTransferenciasCuentas(int op, List<string> codigoscuenta)
+        {
+            //1 Todos
+            //2 Créditos
+            //3 Débitos
+
+            List<Transferencia> transferencias = new List<Transferencia>();
+
+            for (int j = 0; j < codigoscuenta.Count; j++)
+            {
+                transferencias.AddRange(await obtenerTransferenciasCuenta(op, codigoscuenta[j]));
+            }
+
+            return transferencias;
+        }
+
+        #endregion
+
+        #region Cliente
+        public Task<int> ClienteSave(Cliente cliente)
+        {
+            return dbase.InsertAsync(cliente);
+        }
+
+        // Read un registro
+        public Task<Cliente> obtenerCliente(int cid)
+        {
+            return dbase.Table<Cliente>()
+                    .Where(i => i.IdUsuario == cid)
+                    .FirstOrDefaultAsync();
+        }
+
         #endregion
     }
 }

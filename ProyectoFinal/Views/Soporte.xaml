@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoFinal.Views.Soporte"
+             NavigationPage.HasNavigationBar="False">
+    <StackLayout>
+        <StackLayout Orientation="Horizontal">
+            <!-- Volver<Image/>-->
+            <Label Text="SOPORTE"/>
+        </StackLayout>
+
+
+
+        <Label Text="STARBANK"/>
+
+
+
+        <StackLayout>
+            <Label Text="Teléfonos"/>
+            <Label Text="2780-9000" FontAttributes="Bold"/>
+            <Label Text="2270-5020" FontAttributes="Bold"/>
+        </StackLayout>
+
+
+
+        <StackLayout>
+            <Label Text="Línea Móvil 1"/>
+            <Label Text="9800-9090" FontAttributes="Bold"/>
+        </StackLayout>
+
+
+
+        <StackLayout>
+            <Label Text="Línea Móvil 2"/>
+            <Label Text="3280-8000" FontAttributes="Bold"/>
+        </StackLayout>
+
+
+
+        <Label Text="Para llamar sin costo, marca *43 cualquier operadora."/>
+
+
+
+        <StackLayout>
+            <Label Text="O también puedes:"/>
+            <Button Clicked="btncorreo_Clicked"
+                    
+                    Text="Enviarnos un correo"
+                    FontAttributes="Bold"
+                    BackgroundColor="#9297A6"
+                    TextColor="#F2F2F2"/>
+        </StackLayout>
+    </StackLayout>
+</ContentPage>

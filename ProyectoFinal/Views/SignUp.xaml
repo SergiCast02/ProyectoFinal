@@ -14,7 +14,7 @@
                 <Image x:Name="imgpersona" HeightRequest="200" WidthRequest="200"/>
 
                 <Frame.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="tomarfoto"></TapGestureRecognizer>
+                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="imgpersona_Tapped"></TapGestureRecognizer>
                 </Frame.GestureRecognizers>
             </Frame>
 

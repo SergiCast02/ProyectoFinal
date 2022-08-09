@@ -30,6 +30,7 @@ namespace ProyectoFinal
 
             //MainPage = new MainPage();
             MainPage = new NavigationPage(new Views.LogIn());
+            //MainPage = new NavigationPage(new Views.ControlPresupuestario());
         }
 
         protected override void OnStart()
