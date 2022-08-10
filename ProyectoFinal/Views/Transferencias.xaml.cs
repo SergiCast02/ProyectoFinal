@@ -75,6 +75,22 @@ namespace ProyectoFinal.Views
             valorconversion.Text = "0.00";
         }
 
+        protected override async void OnAppearing()
+        {
+            try
+            {
+                var listacuentas = await App.DBase.obtenerListaPersistencia();
+                listacuentas.RemoveAt(0); //Elimino el Id de los registros porque es el que guarda el usuario al inicio de sesion
+
+                if (listacuentas.Count > 0) { ListaCuentas.ItemsSource = listacuentas; }
+            }
+            catch (Exception error)
+            {
+
+            }
+             
+        }
+
         private async void btntransferir_Clicked(object sender, EventArgs e)
         {
             var cuenta = await App.DBase.obtenerCuenta(cuentaa.Text);
@@ -126,6 +142,23 @@ namespace ProyectoFinal.Views
                         if(resultado2 == 1)
                         {
                             await App.DBase.TransferenciaSave(transferencia);
+
+
+                            var persistencia = new Persistencia();
+                            persistencia.Campo = cuenta.CodigoCuenta;
+                            
+                            bool ciclo = true;
+                            int indice = 1; // para que empiece en 2 en adelante ver mas en Persistencia.cs
+                            while(ciclo == true)
+                            {
+                                indice++;
+
+                                if (await App.DBase.obtenerPersistencia(indice) == null) {
+                                    persistencia.Id = indice;
+                                    await App.DBase.PersistenciaSave(persistencia);
+                                    break;
+                                }
+                            }
 
                             var debitante = await App.DBase.obtenerUsuario(1, "" + pcuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
                             var acreditante = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
@@ -201,5 +234,22 @@ namespace ProyectoFinal.Views
             if (chkcorreo.IsChecked) { chkcorreo.IsChecked = false; }
             else { chkcorreo.IsChecked = true; }
         }
+
+        private void cuentaa_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            dropdowncuentas.IsVisible = false;
+        }
+
+        private void cuentaa_Focused(object sender, FocusEventArgs e)
+        {
+            dropdowncuentas.IsVisible = true;
+        }
+
+        private void ListaCuentas_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            Persistencia persistencia = (Persistencia)e.CurrentSelection[0];
+            cuentaa.Text = persistencia.Campo;
+        }
+
     }
 }

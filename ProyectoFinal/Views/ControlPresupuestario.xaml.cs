@@ -123,6 +123,10 @@ namespace ProyectoFinal.Views
 
         public async Task<double> normalizarMoneda(string moneda, Transferencia transferencia)
         {
+            var date = transferencia.Fecha;
+            date = date.Substring(0, 10);
+            var dolar = await App.DBase.obtenerPrecioDolar(date);
+
             if (moneda == transferencia.Moneda)
             {
                 return transferencia.Valor;
@@ -131,13 +135,14 @@ namespace ProyectoFinal.Views
             {
                 if (moneda == "HNL")
                 {
-                    return transferencia.Valor * 24; // transferencia fue en dolares
+                    return transferencia.Valor * dolar.Precio; // transferencia fue en dolares
                 }
                 else
                 {
-                    return transferencia.Valor / 24; // transferencia fue en lempiras
+                    return transferencia.Valor / dolar.Compra; // transferencia fue en lempiras
                 }
             }
+
         }
     }
 }

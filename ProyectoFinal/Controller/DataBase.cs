@@ -295,11 +295,16 @@ namespace ProyectoFinal.Controller
             }
         }
 
-        public Task<Dolar> obtenerPrecioDolarActual(string fecha)
+        public Task<Dolar> obtenerPrecioDolar(string fecha)
         {
             return dbase.Table<Dolar>()
                 .Where(i => i.Fecha == fecha)
                 .FirstOrDefaultAsync();
+        }
+
+        public Task<List<Dolar>> obtenerListaPrecioDolar()
+        {
+            return dbase.Table<Dolar>().ToListAsync();
         }
         #endregion
     }

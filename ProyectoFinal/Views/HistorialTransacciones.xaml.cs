@@ -87,8 +87,12 @@ namespace ProyectoFinal.Views
 
             for (int i = 0; i < lista.Count; i++)
             {
-                detalle.moneda = pcuenta.Moneda;
+                var date = lista[i].Fecha;
+                date = date.Substring(0, 10);
+                var dolar = await App.DBase.obtenerPrecioDolar(date);
 
+                detalle.moneda = pcuenta.Moneda;
+                
                 if (lista[i].Envia != pcuenta.CodigoCuenta)
                 {
                     lista[i].Accion = "crédito";
@@ -111,29 +115,32 @@ namespace ProyectoFinal.Views
                 }
 
                 detalle.accion = lista[i].Accion;
+                detalle.fecha = lista[i].Fecha;
 
                 //Convertir a la moneda de la cuenta
 
-                if (pcuenta.Moneda == lista[i].Moneda)
-                {
-                    detalle.valor = "" + lista[i].Valor;
-                }
-                else
+                if (pcuenta.Moneda != lista[i].Moneda)
                 {
                     if (pcuenta.Moneda == "HNL")
                     {
-                        detalle.valor = "" + lista[i].Valor * 24; // transferencia fue en dolares
+                        lista[i].Valor = lista[i].Valor * dolar.Precio; // transferencia fue en dolares
+                        lista[i].Moneda = "HNL";
                     }
                     else
                     {
-                        detalle.valor = "" + lista[i].Valor / 24; // transferencia fue en lempiras
+                        lista[i].Valor = lista[i].Valor / dolar.Compra; // transferencia fue en lempiras
+                        lista[i].Moneda = "USD";
                     }
                 }
 
+                if (lista[i].Envia != pcuenta.CodigoCuenta) { lista[i].Accion = "crédito"; }
+
+
+
                 //detalle.moneda = lista[i].Moneda;
-                //detalle.valor = "" + lista[i].Valor;
-                
-                detalles.Add(new detallesT() { imagen = detalle.imagen, accion = detalle.accion, color = detalle.color, concepto = detalle.concepto, moneda = detalle.moneda, valor = detalle.valor });
+                detalle.valor = "" + lista[i].Valor;
+
+                detalles.Add(new detallesT() { imagen = detalle.imagen, accion = detalle.accion, color = detalle.color, concepto = detalle.concepto, moneda = detalle.moneda, valor = detalle.valor , fecha = detalle.fecha});
             }
 
             //var usuario = await App.DBase.obtenerUsuario();
@@ -150,5 +157,6 @@ namespace ProyectoFinal.Views
         public string accion { get; set; }
         public string moneda { get; set; }
         public string valor { get; set; }
+        public string fecha { get; set; }
     }
 }

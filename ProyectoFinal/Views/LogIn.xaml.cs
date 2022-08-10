@@ -63,7 +63,7 @@ namespace ProyectoFinal.Views
             {
                 var date = await UsuarioApi.GetFechaServidor();
                 date = date.Substring(0, 10);
-                var _dolar = await App.DBase.obtenerPrecioDolarActual(date);
+                var _dolar = await App.DBase.obtenerPrecioDolar(date);
                 dolar = _dolar;
             }
             catch (Exception error)
