@@ -3,54 +3,62 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoFinal.Views.LogIn"
              NavigationPage.HasNavigationBar="False">
-    
+
+
     <StackLayout>
-        <Label Text="STAR BANK"/>
 
-
+        <ActivityIndicator IsRunning="True" x:Name="activityindicator"
+                   VerticalOptions="CenterAndExpand" />
         
-        <StackLayout>
-            <Label Text="Usuario"/>
-            <Entry x:Name="txtusuario"/>
+        <StackLayout x:Name="_pagecontent" IsVisible="False">
+            <Label Text="STAR BANK"/>
+
+
+
+            <StackLayout>
+                <Label Text="Usuario"/>
+                <Entry x:Name="txtusuario"/>
+            </StackLayout>
+
+
+
+            <StackLayout>
+                <Label Text="Contraseña"/>
+                <Entry x:Name="txtcontraseña" IsPassword="True"/>
+                <Label Margin="0,100,0,0" Text="Olvidé mi contraseña">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goRecuperarContraseña"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+
+
+            <StackLayout Orientation="Horizontal">
+                <CheckBox x:Name="chkrecordarc"/>
+                <Label Text="Recordar mi contraseña cuando inicie sesión">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="lblrecuperarc_Tapped"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
+
+
+
+            <Button Text="Ingresar" Clicked="btningresar"/>
+
+
+
+            <StackLayout Orientation="Horizontal">
+                <Label Text="¿No tiene una cuenta?"/>
+                <Label Text="Aperturar cuenta">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goSingUp"></TapGestureRecognizer>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
         </StackLayout>
 
-        
-
-        <StackLayout>
-            <Label Text="Contraseña"/>
-            <Entry x:Name="txtcontraseña" IsPassword="True"/>
-            <Label Margin="0,100,0,0" Text="Olvidé mi contraseña">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goRecuperarContraseña"></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-            </Label>
-        </StackLayout>
-
-
-
-        <StackLayout Orientation="Horizontal">
-            <CheckBox x:Name="chkrecordarc"/>
-            <Label Text="Recordar mi contraseña cuando inicie sesión">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="lblrecuperarc_Tapped"/>
-                </Label.GestureRecognizers>
-            </Label>
-        </StackLayout>
-
-
-
-        <Button Text="Ingresar" Clicked="btningresar"/>
-
-
-        
-        <StackLayout Orientation="Horizontal">
-            <Label Text="¿No tiene una cuenta?"/>
-            <Label Text="Aperturar cuenta">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goSingUp"></TapGestureRecognizer>
-                </Label.GestureRecognizers>
-            </Label>
-        </StackLayout>
     </StackLayout>
     
 </ContentPage>

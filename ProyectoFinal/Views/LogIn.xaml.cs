@@ -20,6 +20,9 @@ namespace ProyectoFinal.Views
         public LogIn()
         {
             InitializeComponent();
+            actualizarDolar();
+            activityindicator.IsVisible = false;
+            _pagecontent.IsVisible = true;
         }
 
         protected async override void OnAppearing()
@@ -49,6 +52,11 @@ namespace ProyectoFinal.Views
 
             }
 
+            
+        }
+
+        async void actualizarDolar()
+        {
             try
             {
                 var listaprecios = await PrecioDolar.GetListaPrecioDolar();

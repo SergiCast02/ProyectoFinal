@@ -115,8 +115,8 @@ namespace ProyectoFinal.Views
                 for (int i = 0; i < ldebitos.Count; i++) { salido += await normalizarMoneda(moneda, ldebitos[i]); }
             }
 
-            txtdinet.Text = moneda + " " + String.Format("{0:0.00}", entrado);
-            txtdinst.Text = moneda + " " + String.Format("{0:0.00}", salido);
+            txtdinet.Text = moneda + " " + string.Format("{0:C}", entrado).Replace("$", string.Empty);
+            txtdinst.Text = moneda + " " + string.Format("{0:C}", salido).Replace("$", string.Empty);
             txtentradast.Text = "" + lcreditos.Count;
             txtsalidast.Text = "" + ldebitos.Count;
         }

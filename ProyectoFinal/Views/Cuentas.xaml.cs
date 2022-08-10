@@ -41,7 +41,22 @@ namespace ProyectoFinal.Views
 
         protected override async void OnAppearing()
         {
-            ListCuentas.ItemsSource = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            var cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+
+            List<_cuenta> _cuentas = new List<_cuenta>();
+
+            for (int i = 0; i < cuentas.Count; i++)
+            {
+                _cuentas.Add(new _cuenta
+                {
+                    CodigoCuenta = cuentas[i].CodigoCuenta,
+                    Moneda = cuentas[i].Moneda,
+                    Saldo = string.Format("{0:C}", cuentas[i].Saldo).Replace("$", string.Empty)
+                });
+            }
+
+            ListCuentas.ItemsSource = _cuentas;
+                
         }
 
         private async void btncreacuenta_Clicked(object sender, EventArgs e)
@@ -66,8 +81,10 @@ namespace ProyectoFinal.Views
 
         private async void ListCuentas_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            Cuenta cuenta = (Cuenta)e.CurrentSelection[0];
+            _cuenta __cuenta = (_cuenta)e.CurrentSelection[0];
             //[0] porque es el indice de los elementos seleccionados, como es seleccion unica (se configura como parametro en el xaml) siempre sera el indice [0]
+
+            var cuenta = await App.DBase.obtenerCuenta(__cuenta.CodigoCuenta);
 
             if (operacion == 0)
             {
@@ -78,5 +95,13 @@ namespace ProyectoFinal.Views
                 await Navigation.PushAsync(new Transferencias(pusuario, cuenta, pdolar));
             }
         }
+    }
+
+    public class _cuenta
+    {
+        public string CodigoCuenta { get; set; }
+        public string Moneda { get; set; }
+        public string Saldo { get; set; }
+        public string Accion { get; set; }
     }
 }

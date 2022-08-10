@@ -183,7 +183,7 @@ namespace ProyectoFinal.Views
                 mail.From = new MailAddress("starbankteam@gmail.com");
                 mail.To.Add(usuariocompleto.Email);
                 mail.Subject = "STARBANK | Código de verificación";
-                mail.Body = "¡Hola <b>"+usuariocompleto.NombreCompleto+"</b>, Gracias por elegir STARBANK.\n\nEste es tu código de verificación: "+usuariocompleto.CodigoVerificacion;
+                mail.Body = "¡Hola <b>"+usuariocompleto.NombreCompleto+"!</b> <br> Gracias por elegir STARBANK. Este es tu código de verificación: <br> <h3>"+usuariocompleto.CodigoVerificacion+"</h3>";
                 mail.IsBodyHtml = true;
                 SmtpServer.Port = 587;
                 SmtpServer.Host = "smtp.gmail.com";
@@ -214,8 +214,12 @@ namespace ProyectoFinal.Views
 
         private async void btninicio_Clicked(object sender, EventArgs e)
         {
-            Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
-            await Navigation.PopAsync();
+            if (btnregistrar.IsEnabled)
+            {
+                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
+                await Navigation.PopAsync();
+            }
+            
         }
     }
 }

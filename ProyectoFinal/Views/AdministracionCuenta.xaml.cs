@@ -30,10 +30,11 @@ namespace ProyectoFinal.Views
         {
             if (pcuenta.Tipo == "ahorro") { txttipocuenta.Text = "Cuenta de ahorros"; }
             txtmoneda.Text = pcuenta.Moneda;
-            txtsaldo.Text = "" + pcuenta.Saldo;
+            txtsaldo.Text = string.Format("{0:C}", pcuenta.Saldo).Replace("$", string.Empty);
             txtcodigocuenta.Text = pcuenta.CodigoCuenta;
             txtmesactual.Text = await obtenerMesServidor();
             List <Transferencia> lista = await App.DBase.obtenerTransferenciasCuenta(1, pcuenta.CodigoCuenta);
+            List<_transferencia> _transferencias = new List<_transferencia>();
 
             lista = Enumerable.Reverse(lista).ToList(); //Invierte la lista, la ultima transaccion hecha tiene que estar mas arriba
 
@@ -60,15 +61,25 @@ namespace ProyectoFinal.Views
                 }
 
                 if (lista[i].Envia != pcuenta.CodigoCuenta) { lista[i].Accion = "crédito"; }
+
+                _transferencias.Add(new _transferencia
+                {
+                    IdTransferencia = lista[i].Id,
+                    Accion = lista[i].Accion,
+                    Moneda = lista[i].Moneda,
+                    Valor = string.Format("{0:C}", lista[i].Valor).Replace("$", string.Empty)
+                });
             }
 
-            ListTransferenciasMes.ItemsSource = lista;
+            ListTransferenciasMes.ItemsSource = _transferencias;
         }
 
-        private void ListTransferenciasMes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void ListTransferenciasMes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            var transferencia = e.CurrentSelection[0];
+            _transferencia __transferencia = (_transferencia)e.CurrentSelection[0];
             //[0] porque es el indice de los elementos seleccionados, como es seleccion unica (se configura como parametro en el xaml) siempre sera el indice [0]
+
+            var transferencia = await App.DBase.obtenerTransferencia(__transferencia.IdTransferencia);
         }
 
         private async Task<string> obtenerMesServidor()
@@ -134,5 +145,13 @@ namespace ProyectoFinal.Views
         {
             await Navigation.PushAsync(new ControlPresupuestario(pusuario, pcuenta));
         }
+    }
+
+    public class _transferencia
+    {
+        public int IdTransferencia { get; set; }
+        public string Accion { get; set; }
+        public string Moneda { get; set; }
+        public string Valor { get; set; }
     }
 }

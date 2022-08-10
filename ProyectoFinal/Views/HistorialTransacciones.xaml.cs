@@ -138,7 +138,7 @@ namespace ProyectoFinal.Views
 
 
                 //detalle.moneda = lista[i].Moneda;
-                detalle.valor = "" + lista[i].Valor;
+                detalle.valor = string.Format("{0:C}", lista[i].Valor).Replace("$", string.Empty);
 
                 detalles.Add(new detallesT() { imagen = detalle.imagen, accion = detalle.accion, color = detalle.color, concepto = detalle.concepto, moneda = detalle.moneda, valor = detalle.valor , fecha = detalle.fecha});
             }

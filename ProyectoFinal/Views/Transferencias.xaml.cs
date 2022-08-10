@@ -48,7 +48,7 @@ namespace ProyectoFinal.Views
 
             codigocuenta.Text = cuenta.CodigoCuenta;
             moneda.Text = cuenta.Moneda;
-            saldo.Text = ""+cuenta.Saldo;
+            saldo.Text = string.Format("{0:C}", cuenta.Saldo).Replace("$", string.Empty);
 
             cardcuenta.IsVisible = true;
 
@@ -81,7 +81,7 @@ namespace ProyectoFinal.Views
             {
                 var listacuentas = await App.DBase.obtenerListaPersistencia();
                 listacuentas.RemoveAt(0); //Elimino el Id de los registros porque es el que guarda el usuario al inicio de sesion
-
+                listacuentas = Enumerable.Reverse(listacuentas).ToList(); //Invierte la lista, el ultimo registro tiene que estar mas arriba pues es el mas reciente
                 if (listacuentas.Count > 0) { ListaCuentas.ItemsSource = listacuentas; }
             }
             catch (Exception error)
@@ -93,16 +93,19 @@ namespace ProyectoFinal.Views
 
         private async void btntransferir_Clicked(object sender, EventArgs e)
         {
+            btntransferir.IsEnabled = false;
+
             var cuenta = await App.DBase.obtenerCuenta(cuentaa.Text);
-            if (cuentaa.Text == pcuenta.CodigoCuenta) { await DisplayAlert("Aviso", "No puedes transferir a tu misma cuenta", "OK"); return; }
-            if(cuenta == null) { await DisplayAlert("Aviso", "La cuenta a acreditar que ingresaste no existe.", "OK"); }
+            if (cuentaa.Text == pcuenta.CodigoCuenta) { await DisplayAlert("Aviso", "No puedes transferir a tu misma cuenta", "OK"); btntransferir.IsEnabled = true; return; }
+            if(cuenta == null) { await DisplayAlert("Aviso", "La cuenta a acreditar que ingresaste no existe.", "OK"); btntransferir.IsEnabled = true; }
             else
             {
-                if(monto.Text == "" || monto.Text == null) { await DisplayAlert("Aviso", "Ingresa un monto de transferencia", "OK"); return; }
-                if(double.Parse(monto.Text) <= 0) { await DisplayAlert("Aviso", "Ingrese un valor válido para el monto de la transferencia", "OK"); return; }
+                if(monto.Text == "" || monto.Text == null) { await DisplayAlert("Aviso", "Ingresa un monto de transferencia", "OK"); btntransferir.IsEnabled = true; return; }
+                if(double.Parse(monto.Text) <= 0) { await DisplayAlert("Aviso", "Ingrese un valor válido para el monto de la transferencia", "OK"); btntransferir.IsEnabled = true;  return; }
                 if(double.Parse(monto.Text) > pcuenta.Saldo)
                 {
                     await DisplayAlert("Aviso", "El monto de la transacción supera el saldo de tu cuenta", "OK");
+                    btntransferir.IsEnabled = true;
                 }
                 else
                 {
@@ -158,6 +161,14 @@ namespace ProyectoFinal.Views
                                     await App.DBase.PersistenciaSave(persistencia);
                                     break;
                                 }
+                                else
+                                {
+                                    Persistencia _persistencia = await App.DBase.obtenerPersistencia(indice);
+                                    if (_persistencia.Campo == cuenta.CodigoCuenta)
+                                    {
+                                        break;
+                                    }
+                                }
                             }
 
                             var debitante = await App.DBase.obtenerUsuario(1, "" + pcuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
@@ -181,17 +192,19 @@ namespace ProyectoFinal.Views
         }
 
         #region Enviar e-mail
-        void enviarcorreo(Usuario usuariod, Usuario usuarioa, Cuenta cuentad, Cuenta cuentaa, Transferencia transferencia)
+        async void enviarcorreo(Usuario usuariod, Usuario usuarioa, Cuenta cuentad, Cuenta cuentaa, Transferencia transferencia)
         {
             try
             {
+                string valortransferencia = string.Format("{0:C}", transferencia.Valor).Replace("$", string.Empty);
+
                 MailMessage mail = new MailMessage();
                 SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
 
                 mail.From = new MailAddress("starbankteam@gmail.com");
                 mail.To.Add(usuariod.Email);
                 mail.Subject = "STARBANK | Código de verificación";
-                mail.Body = "<html> <Body> <h1>Comprobante de Transacción</h1> <br><br> <p>Cliente: <b>" + usuariod.NombreCompleto+ "</b></p> <br> <p>Cuenta Saliente: <b>" + cuentad.CodigoCuenta + "</b></p> <br> <p>Cuenta Entrante: <b>" + cuentaa.CodigoCuenta + "</b></p> <br><br> <h3>MONTO DE LA TRANSFERENCIA: "+cuentad.Moneda+ String.Format("{0:0.00}", transferencia.Valor) +"</h3> </Body> </html>";
+                mail.Body = "<html> <Body> <h1>Comprobante de Transacción</h1> <br><br> <h3>Cambio del dólar, hoy "+obtenerFecha((await UsuarioApi.GetFechaServidor()).Substring(0, 10)) +"</h3> <p>Compra: <b>"+pdolar.Compra+ "</b> | Venta: <b>" + pdolar.Venta + "</b></p> <br><br> <p>Cliente: <b>" + usuariod.NombreCompleto+ "</b></p> <br> <p>Cuenta Saliente: <b>" + cuentad.CodigoCuenta + "</b></p> <br> <p>Cuenta Entrante: <b>" + cuentaa.CodigoCuenta + "</b></p> <br><br> <h3>MONTO DE LA TRANSFERENCIA: "+cuentad.Moneda+ valortransferencia +"</h3><br><br><b>Nota del debitante: </b><p>"+transferencia.Comentario+"</p></Body> </html>";
                 mail.IsBodyHtml = true;
                 SmtpServer.Port = 587;
                 SmtpServer.Host = "smtp.gmail.com";
@@ -251,5 +264,52 @@ namespace ProyectoFinal.Views
             cuentaa.Text = persistencia.Campo;
         }
 
+        public string obtenerFecha(string fecha)
+        {
+            var _fecha = DateTime.Parse(fecha);
+            string mes = "";
+
+            switch (_fecha.Month)
+            {
+                case 1:
+                    mes = "enero";
+                    break;
+                case 2:
+                    mes = "febrero";
+                    break;
+                case 3:
+                    mes = "marzo";
+                    break;
+                case 4:
+                    mes = "abril";
+                    break;
+                case 5:
+                    mes = "mayo";
+                    break;
+                case 6:
+                    mes = "junio";
+                    break;
+                case 7:
+                    mes = "julio";
+                    break;
+                case 8:
+                    mes = "agosto";
+                    break;
+                case 9:
+                    mes = "septiembre";
+                    break;
+                case 10:
+                    mes = "octubre";
+                    break;
+                case 11:
+                    mes = "noviembre";
+                    break;
+                case 12:
+                    mes = "diciembre";
+                    break;
+            }
+
+            return _fecha.Day + " de " + mes + " del " + _fecha.Year;
+        }
     }
 }
