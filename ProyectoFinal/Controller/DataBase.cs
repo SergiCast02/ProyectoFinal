@@ -21,6 +21,7 @@ namespace ProyectoFinal.Controller
             dbase.CreateTableAsync<Cuenta>(); // Creando la tabla de Cuentas (dinero)
             dbase.CreateTableAsync<Transferencia>(); // Creando la tabla de Transferencias
             dbase.CreateTableAsync<Cliente>(); // Creando la tabla de Cliente
+            dbase.CreateTableAsync<Dolar>(); // Creando la tabla de Dolares (registro de precios del dolar)
         }
 
         #region Usuario
@@ -278,6 +279,28 @@ namespace ProyectoFinal.Controller
                     .FirstOrDefaultAsync();
         }
 
+        #endregion
+
+        #region Dolar
+        public Task<int> DolarSave(Dolar precio)
+        {
+            return dbase.InsertAsync(precio);
+        }
+        
+        public void DolarSave(List<Dolar> listaprecios)
+        {
+            for (int i = 0; i < listaprecios.Count; i++)
+            {
+                dbase.InsertAsync(listaprecios[i]);
+            }
+        }
+
+        public Task<Dolar> obtenerPrecioDolarActual(string fecha)
+        {
+            return dbase.Table<Dolar>()
+                .Where(i => i.Fecha == fecha)
+                .FirstOrDefaultAsync();
+        }
         #endregion
     }
 }

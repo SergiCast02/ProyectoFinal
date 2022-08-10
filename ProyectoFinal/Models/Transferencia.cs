@@ -14,7 +14,7 @@ namespace ProyectoFinal.Models
         public double Valor { get; set; }
         public string Envia { get; set; }
         public string Recibe { get; set; }
-        public DateTime FechaHora { get; set; }
+        public string Fecha { get; set; }
         public string Comentario { get; set; }
     }
 }

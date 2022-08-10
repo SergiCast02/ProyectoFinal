@@ -37,5 +37,28 @@ namespace ProyectoFinal.Api
             return precio[0];
         }
 
+        public static async Task<List<Dolar>> GetListaPrecioDolar()
+        {
+            List<Dolar> precios = new List<Dolar>();
+
+            try
+            {
+                var uri = new Uri(URL_SITIOS + "listaprecio.php");
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    precios = JsonConvert.DeserializeObject<List<Dolar>>(content);
+                    return precios;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return precios;
+        }
     }
 }

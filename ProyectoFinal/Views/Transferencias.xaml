@@ -66,7 +66,11 @@
                     <Entry x:Name="concepto" Placeholder="Concepto (breve descripción)"/>
                     <StackLayout Orientation="Horizontal">
                         <CheckBox x:Name="chkcorreo"/>
-                        <Label Text="Enviar copia de la transferencia a tu correo"/>
+                        <Label Text="Enviar copia de la transferencia a tu correo">
+                            <Label.GestureRecognizers>
+                                <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="lblenviarcopia_Tapped"/>
+                            </Label.GestureRecognizers>
+                        </Label>
                     </StackLayout>
                 </StackLayout>
 

@@ -15,12 +15,14 @@ namespace ProyectoFinal.Views
     {
         Usuario pusuario;
         Cuenta pcuenta;
+        Dolar pdolar;
 
-        public ControlPresupuestario(Usuario usuario)
+        public ControlPresupuestario(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
 
             pusuario = usuario;
+            pdolar = dolar;
         }
 
         public ControlPresupuestario(Usuario usuario, Cuenta cuenta)

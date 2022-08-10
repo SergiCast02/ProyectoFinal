@@ -15,24 +15,28 @@ namespace ProyectoFinal.Views
     public partial class Cuentas : ContentPage
     {
         Usuario pusuario;
+        Dolar pdolar;
         int operacion = 0;
 
         //0 pagina normal por defecto (dirige a administracion de cuenta)
         //1 seleccionar cuenta para redirigir a la pantalla Transferencias
 
-        public Cuentas(Usuario usuario)
+        public Cuentas(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
             pusuario = usuario;
+            pdolar = dolar;
         }
 
-        public Cuentas(Usuario usuario, int op)
+        public Cuentas(Usuario usuario, int op, Dolar dolar)
         {
             InitializeComponent();
             pusuario = usuario;
             operacion = op;
             btnvolver.IsVisible = false;
             btncrearcuenta.IsVisible = true;
+
+            pdolar = dolar;
         }
 
         protected override async void OnAppearing()
@@ -71,7 +75,7 @@ namespace ProyectoFinal.Views
             }
             else if (operacion == 1)
             {
-                await Navigation.PushAsync(new Transferencias(pusuario, cuenta));
+                await Navigation.PushAsync(new Transferencias(pusuario, cuenta, pdolar));
             }
         }
     }

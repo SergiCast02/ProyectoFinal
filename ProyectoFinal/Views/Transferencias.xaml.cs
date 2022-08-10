@@ -20,11 +20,12 @@ namespace ProyectoFinal.Views
         Cuenta pcuenta;
         Dolar pdolar;
 
-        public Transferencias(Usuario usuario)
+        public Transferencias(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
 
             pusuario = usuario;
+            pdolar = dolar;
 
             //Enableds
             cuentaa.IsEnabled = false;
@@ -37,12 +38,13 @@ namespace ProyectoFinal.Views
             valorconversion.Text = "0.00";
         }
 
-        public Transferencias(Usuario usuario, Cuenta cuenta)
+        public Transferencias(Usuario usuario, Cuenta cuenta, Dolar dolar)
         {
             InitializeComponent();
 
             pusuario = usuario;
             pcuenta = cuenta;
+            pdolar = dolar;
 
             codigocuenta.Text = cuenta.CodigoCuenta;
             moneda.Text = cuenta.Moneda;
@@ -73,18 +75,15 @@ namespace ProyectoFinal.Views
             valorconversion.Text = "0.00";
         }
 
-        protected override async void OnAppearing()
-        {
-            var precio = await PrecioDolar.GetPrecioDolar(await UsuarioApi.GetFechaServidor());
-            pdolar = precio;
-        }
-
         private async void btntransferir_Clicked(object sender, EventArgs e)
         {
             var cuenta = await App.DBase.obtenerCuenta(cuentaa.Text);
+            if (cuentaa.Text == pcuenta.CodigoCuenta) { await DisplayAlert("Aviso", "No puedes transferir a tu misma cuenta", "OK"); return; }
             if(cuenta == null) { await DisplayAlert("Aviso", "La cuenta a acreditar que ingresaste no existe.", "OK"); }
             else
             {
+                if(monto.Text == "" || monto.Text == null) { await DisplayAlert("Aviso", "Ingresa un monto de transferencia", "OK"); return; }
+                if(double.Parse(monto.Text) <= 0) { await DisplayAlert("Aviso", "Ingrese un valor válido para el monto de la transferencia", "OK"); return; }
                 if(double.Parse(monto.Text) > pcuenta.Saldo)
                 {
                     await DisplayAlert("Aviso", "El monto de la transacción supera el saldo de tu cuenta", "OK");
@@ -98,7 +97,7 @@ namespace ProyectoFinal.Views
                         Valor = double.Parse(monto.Text),
                         Envia = pcuenta.CodigoCuenta,
                         Recibe = cuentaa.Text,
-                        // sel campo FechaHora se suple en el lado de PHP FechaHora = 
+                        Fecha = await UsuarioApi.GetFechaServidor(),
                         Comentario = concepto.Text
                     };
 
@@ -110,11 +109,11 @@ namespace ProyectoFinal.Views
                     {
                         if(pcuenta.Moneda == "HNL")
                         {
-                            cuenta.Saldo += double.Parse(monto.Text)/24;
+                            cuenta.Saldo += double.Parse(monto.Text)/pdolar.Compra;
                         }
                         else
                         {
-                            cuenta.Saldo += double.Parse(monto.Text)*24;
+                            cuenta.Saldo += double.Parse(monto.Text)*pdolar.Precio;
                         }
                     }
 
@@ -130,9 +129,11 @@ namespace ProyectoFinal.Views
 
                             var debitante = await App.DBase.obtenerUsuario(1, "" + pcuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
                             var acreditante = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
-                            enviarcorreo(debitante, acreditante, pcuenta, cuenta, transferencia);
+
+                            if (chkcorreo.IsChecked) { enviarcorreo(debitante, acreditante, pcuenta, cuenta, transferencia); }
 
                             await DisplayAlert("Aviso", "¡Transferencia realizada con éxito!", "OK");
+                            await Navigation.PushAsync(new Tablero(pusuario, pdolar));
                         }
                     }
                 }
@@ -143,7 +144,7 @@ namespace ProyectoFinal.Views
 
         private async void btnscuenta_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Cuentas(pusuario, 1)); //1 para ocultar boton volver (1es solamente la vista de seleccion de cuentas)
+            await Navigation.PushAsync(new Cuentas(pusuario, 1, pdolar)); //1 para ocultar boton volver (1es solamente la vista de seleccion de cuentas)
         }
 
         #region Enviar e-mail
@@ -193,6 +194,12 @@ namespace ProyectoFinal.Views
             {
                 valorconversion.Text = "0.00";
             }
+        }
+
+        private void lblenviarcopia_Tapped(object sender, EventArgs e)
+        {
+            if (chkcorreo.IsChecked) { chkcorreo.IsChecked = false; }
+            else { chkcorreo.IsChecked = true; }
         }
     }
 }

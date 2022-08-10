@@ -15,11 +15,14 @@ namespace ProyectoFinal.Views
     public partial class Servicios : ContentPage
     {
         Usuario pusuario;
-        public Servicios(Usuario usuario)
+        Dolar pdolar;
+
+        public Servicios(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
 
             pusuario = usuario;
+            pdolar = dolar;
         }
 
         private async void TapGestureRecognizer_agua(object sender, EventArgs e)

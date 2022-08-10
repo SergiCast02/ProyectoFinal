@@ -8,12 +8,15 @@ using System.Threading.Tasks;
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ProyectoFinal.Models;
+using ProyectoFinal.Api;
 
 namespace ProyectoFinal.Views
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class LogIn : ContentPage
     {
+        Dolar dolar;
+
         public LogIn()
         {
             InitializeComponent();
@@ -40,6 +43,28 @@ namespace ProyectoFinal.Views
 
                     }
                 }
+            }
+            catch (Exception error)
+            {
+
+            }
+
+            try
+            {
+                var listaprecios = await PrecioDolar.GetListaPrecioDolar();
+                App.DBase.DolarSave(listaprecios);
+            }
+            catch (Exception error)
+            {
+
+            }
+
+            try
+            {
+                var date = await UsuarioApi.GetFechaServidor();
+                date = date.Substring(0, 10);
+                var _dolar = await App.DBase.obtenerPrecioDolarActual(date);
+                dolar = _dolar;
             }
             catch (Exception error)
             {
@@ -82,7 +107,7 @@ namespace ProyectoFinal.Views
                             else { persistenciaSUsuario(2, usuario); }
 
                             await DisplayAlert("Aviso", "Bienvenido de vuelta: " + usuario.NombreCompleto, "OK");
-                            await Navigation.PushAsync(new Tablero(usuario));
+                            await Navigation.PushAsync(new Tablero(usuario, dolar));
                         }
                         else if (usuario.ContraseñaTemporal == txtcontraseña.Text)
                         {
@@ -144,7 +169,7 @@ namespace ProyectoFinal.Views
                             {
                                 if (chkrecordarc.IsChecked) { persistenciaSUsuario(1, usuario); }
                                 else { persistenciaSUsuario(2, usuario); }
-                                await Navigation.PushAsync(new Tablero(usuario));
+                                await Navigation.PushAsync(new Tablero(usuario, dolar));
                             }
                         }
                         else
@@ -198,7 +223,7 @@ namespace ProyectoFinal.Views
                             {
                                 if (chkrecordarc.IsChecked) { persistenciaSUsuario(1, usuario); }
                                 else { persistenciaSUsuario(2, usuario); }
-                                await Navigation.PushAsync(new Tablero(usuario));
+                                await Navigation.PushAsync(new Tablero(usuario, dolar));
                             }
                         }
                         else
