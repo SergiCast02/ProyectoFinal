@@ -112,7 +112,8 @@ namespace ProyectoFinal.Views
             {
                 Directory = "Fotos_starbank",
                 Name = "fotografia.jpg",
-                SaveToAlbum = true
+                SaveToAlbum = true,
+                CompressionQuality = 10
             });
             // await DisplayAlert("Path directorio", FileFoto.Path, "OK");
 
@@ -146,7 +147,8 @@ namespace ProyectoFinal.Views
 
             FileFoto = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
             {
-                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Custom,
+                CustomPhotoSize = 10
             });
 
 
