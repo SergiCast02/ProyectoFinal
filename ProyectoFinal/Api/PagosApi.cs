@@ -38,6 +38,26 @@ namespace ProyectoFinal.Api
             return pagos;
         }
 
+        public static async Task<bool> SetDeudasUsuario(string identidad)
+        {
+            try
+            {
+                var uri = new Uri(URL_SITIOS + "creardeudasservicios.php?identidad=" + identidad);
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return false;
+        }
+
         public async static Task<bool> UpdatePago(Pagos pago)
         {
             try

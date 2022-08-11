@@ -128,6 +128,8 @@ namespace ProyectoFinal.Views
                     UserDialogs.Instance.ShowLoading("Creando usuario", MaskType.Clear);
                     //guardar en API
                     bool apiresult = await UsuarioApi.CreateUsuario(usuariocompleto);
+                    //Crearle deudas servicios de agua y electricidad
+                    var respuesta = await PagosApi.SetDeudasUsuario(usuariocompleto.NumeroIdentidad);
                     //guardar en SQLite
                     var result = await App.DBase.UsuarioSave(usuariocompleto);
                     persistenciaSUsuario(usuariocompleto);

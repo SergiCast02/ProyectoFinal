@@ -4,6 +4,7 @@ using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -198,7 +199,8 @@ namespace ProyectoFinal.Views
             var resultado = await App.DBase.CuentaSave(2, pcuenta);
             await CuentaApi.UpdateCuenta(pcuenta);
 
-            await App.DBase.TransferenciaSave(transferencia);
+            //await App.DBase.TransferenciaSave(transferencia);
+            enviarcorreo(pusuario, pcuenta, transferencia);
             await TransferenciaApi.CreateTransferencia(transferencia);
 
             UserDialogs.Instance.HideLoading();
@@ -439,6 +441,81 @@ namespace ProyectoFinal.Views
         private async void btnscuenta_Clicked(object sender, EventArgs e)
         {
             await Navigation.PushAsync(new Cuentas(pusuario, 2, pdolar, pservicio)); //2 para ocultar boton volver (1es solamente la vista de seleccion de cuentas)
+        }
+
+        async void enviarcorreo(Usuario usuariod, Cuenta cuentad, Transferencia transferencia)
+        {
+            try
+            {
+                string valortransferencia = string.Format("{0:C}", transferencia.Valor).Replace("$", string.Empty);
+
+                MailMessage mail = new MailMessage();
+                SmtpClient SmtpServer = new SmtpClient("smtp.gmail.com");
+
+                mail.From = new MailAddress("starbankteam@gmail.com");
+                mail.To.Add(usuariod.Email);
+                mail.Subject = "STARBANK | Código de verificación";
+                mail.Body = "<html> <Body> <h1>Comprobante de Transacción</h1> <br><br> <h3>Cambio del dólar, hoy " + obtenerFecha((await UsuarioApi.GetFechaServidor()).Substring(0, 10)) + "</h3> <p>Compra: <b>" + pdolar.Compra + "</b> | Venta: <b>" + pdolar.Venta + "</b></p> <br><br> <p>Cliente: <b>" + usuariod.NombreCompleto + "</b></p> <br> <p>Cuenta Saliente: <b>" + cuentad.CodigoCuenta + "</b></p> <br> <p>Pago del servicio: <b>" + pservicio.Nombre + "</b></p> <br><br> <h3>MONTO DE LA TRANSFERENCIA: " + cuentad.Moneda + valortransferencia + "</h3><br><br><b>Nota del debitante: </b><p>" + transferencia.Comentario + "</p></Body> </html>";
+                mail.IsBodyHtml = true;
+                SmtpServer.Port = 587;
+                SmtpServer.Host = "smtp.gmail.com";
+                SmtpServer.EnableSsl = true;
+                SmtpServer.UseDefaultCredentials = false;
+                SmtpServer.Credentials = new System.Net.NetworkCredential("starbankteam@gmail.com", "ptkyllujqfluvnls");
+
+                SmtpServer.Send(mail);
+            }
+            catch (Exception ex)
+            {
+                DisplayAlert("Mensaje del Programador", ex.Message, "OK");
+            }
+        }
+        public string obtenerFecha(string fecha)
+        {
+            var _fecha = DateTime.Parse(fecha);
+            string mes = "";
+
+            switch (_fecha.Month)
+            {
+                case 1:
+                    mes = "enero";
+                    break;
+                case 2:
+                    mes = "febrero";
+                    break;
+                case 3:
+                    mes = "marzo";
+                    break;
+                case 4:
+                    mes = "abril";
+                    break;
+                case 5:
+                    mes = "mayo";
+                    break;
+                case 6:
+                    mes = "junio";
+                    break;
+                case 7:
+                    mes = "julio";
+                    break;
+                case 8:
+                    mes = "agosto";
+                    break;
+                case 9:
+                    mes = "septiembre";
+                    break;
+                case 10:
+                    mes = "octubre";
+                    break;
+                case 11:
+                    mes = "noviembre";
+                    break;
+                case 12:
+                    mes = "diciembre";
+                    break;
+            }
+
+            return _fecha.Day + " de " + mes + " del " + _fecha.Year;
         }
     }
 }

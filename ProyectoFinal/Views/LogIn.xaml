@@ -5,24 +5,29 @@
              NavigationPage.HasNavigationBar="False">
 
 
-    <StackLayout>
+    <StackLayout BackgroundColor="#131D47" Padding="50">
 
         <StackLayout x:Name="_pagecontent" IsVisible="True">
-            <Label Text="STAR BANK"/>
+            <Label TextColor="#FFFFFF" Text="STAR BANK" FontSize="40" FontAttributes="Bold"/>
 
 
 
-            <StackLayout>
-                <Label Text="Usuario"/>
-                <Entry x:Name="txtusuario"/>
+            <StackLayout Margin="0,50,0,0">
+                <Label TextColor="#FFFFFF" Text="Usuario"/>
+                <Frame Padding="0" CornerRadius="10">
+                    <Entry x:Name="txtusuario"/>
+                </Frame>
             </StackLayout>
 
 
 
-            <StackLayout>
-                <Label Text="Contraseña"/>
-                <Entry x:Name="txtcontraseña" IsPassword="True"/>
-                <Label Margin="0,100,0,0" Text="Olvidé mi contraseña">
+            <StackLayout Margin="0,25,0,0">
+                <Label TextColor="#FFFFFF" Text="Contraseña"/>
+                <Frame Padding="0" CornerRadius="10">
+                    <Entry x:Name="txtcontraseña" IsPassword="True"/>
+                </Frame>
+                
+                <Label TextColor="#FFFFFF" Margin="0,10,0,0" Text="Olvidé mi contraseña">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goRecuperarContraseña"></TapGestureRecognizer>
                     </Label.GestureRecognizers>
@@ -31,9 +36,9 @@
 
 
 
-            <StackLayout Orientation="Horizontal">
+            <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
                 <CheckBox x:Name="chkrecordarc"/>
-                <Label Text="Recordar mi contraseña cuando inicie sesión">
+                <Label TextColor="#FFFFFF" Text="Recordar mi contraseña cuando inicie sesión">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="lblrecuperarc_Tapped"/>
                     </Label.GestureRecognizers>
@@ -47,8 +52,8 @@
 
 
             <StackLayout Orientation="Horizontal">
-                <Label Text="¿No tiene una cuenta?"/>
-                <Label Text="Aperturar cuenta">
+                <Label TextColor="#FFFFFF" Text="¿No tiene una cuenta?"/>
+                <Label TextColor="#FFFFFF" Text="Aperturar cuenta" FontAttributes="Bold">
                     <Label.GestureRecognizers>
                         <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goSingUp"></TapGestureRecognizer>
                     </Label.GestureRecognizers>

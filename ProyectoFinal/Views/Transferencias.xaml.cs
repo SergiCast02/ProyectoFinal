@@ -147,7 +147,7 @@ namespace ProyectoFinal.Views
 
                         if (resultado2 == 1)
                         {
-                            await App.DBase.TransferenciaSave(transferencia);
+                            //await App.DBase.TransferenciaSave(transferencia);
                             await TransferenciaApi.CreateTransferencia(transferencia);
 
 

@@ -3,26 +3,32 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoFinal.Views.RecuperarContraseña"
              NavigationPage.HasNavigationBar="False">
-    <StackLayout>
-        <Label Text="STAR BANK"/>
+    <StackLayout BackgroundColor="#131D47" Padding="50">
+        <Label TextColor="#FFFFFF" Text="STAR BANK" FontSize="40" FontAttributes="Bold"/>
 
 
 
         <StackLayout>
-            <Label Text="Enviaremos una clave de recuperación al correo electrónico asociado a tu cuenta:"/>
-            <Entry x:Name="txtemail" TextChanged="txtemail_TextChanged" Keyboard="Email"/>
+            <Label TextColor="#FFFFFF" Margin="0,25,0,0" Text="Enviaremos una clave de recuperación al correo electrónico asociado a tu cuenta:"/>
+            <Frame Padding="0" CornerRadius="10">
+                <Entry x:Name="txtemail" TextChanged="txtemail_TextChanged" Keyboard="Email"/>
+            </Frame>
         </StackLayout>
 
 
 
-        <Button IsEnabled="False" x:Name="btnenviarcontraseñat" Text="Enviar" Clicked="btnenviarcontraseñat_Clicked"/>
+        <Button Margin="0,25,0,0" IsEnabled="False" x:Name="btnenviarcontraseñat" Text="Enviar" Clicked="btnenviarcontraseñat_Clicked"/>
 
 
 
-        <Label Margin="0,100,0,0" Text="Volver">
-            <Label.GestureRecognizers>
+        <Frame Padding="10" Margin="0,100,0,0" BackgroundColor="#9297A6">
+            <Label TextColor="#FFFFFF" Text="Volver" FontAttributes="Bold" FontSize="16" HorizontalOptions="CenterAndExpand">
+                
+            </Label>
+
+            <Frame.GestureRecognizers>
                 <TapGestureRecognizer NumberOfTapsRequired="1" Tapped="goLogIn"></TapGestureRecognizer>
-            </Label.GestureRecognizers>
-        </Label>
+            </Frame.GestureRecognizers>
+        </Frame>
     </StackLayout>
 </ContentPage>
