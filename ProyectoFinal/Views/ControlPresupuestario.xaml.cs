@@ -40,7 +40,7 @@ namespace ProyectoFinal.Views
             List<string> cuentas = new List<string>();
             cuentas.Add("Todas");
 
-            var _cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            var _cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.NumeroIdentidad);
 
             if(_cuentas.Count < 1)
             {
@@ -81,8 +81,11 @@ namespace ProyectoFinal.Views
             List<Transferencia> lcreditos = new List<Transferencia>();
             List<Transferencia> ldebitos = new List<Transferencia>();
 
-            double entrado = 0, salido = 0;
-            string moneda = "";
+            List<Transferencia> lcreditos2 = new List<Transferencia>();
+            List<Transferencia> ldebitos2 = new List<Transferencia>();
+
+            double entrado = 0, salido = 0, entrado2 = 0, salido2 = 0;
+            string moneda = "", moneda2 = "";
 
             //1 Todos
             //2 Créditos
@@ -100,7 +103,7 @@ namespace ProyectoFinal.Views
             }
             else
             {
-                List<string> listccuenta = new List<string>();
+                /*List<string> listccuenta = new List<string>();
                 moneda = "HNL";
 
                 for (int i = 0; i < pckccuenta.ItemsSource.Count-1; i++)
@@ -112,13 +115,41 @@ namespace ProyectoFinal.Views
                 ldebitos = await App.DBase.obtenerTransferenciasCuentas(3, listccuenta); //trae las transferencias que tengan que ver con esta lista de cuentas
 
                 for (int i = 0; i < lcreditos.Count; i++) { entrado += await normalizarMoneda(moneda, lcreditos[i]); }
+                for (int i = 0; i < ldebitos.Count; i++) { salido += await normalizarMoneda(moneda, ldebitos[i]); }*/
+
+                List<string> listccuenta = new List<string>();
+
+                for (int i = 0; i < pckccuenta.ItemsSource.Count - 1; i++) { listccuenta.Add(pckccuenta.ItemsSource[i + 1].ToString()); }
+
+                var cuenta = await App.DBase.obtenerCuenta(listccuenta[0]);
+                moneda = cuenta.Moneda;
+
+                lcreditos = await App.DBase.obtenerTransferenciasCuenta(2, listccuenta[0]); //trae las transferencias que tengan que ver con esta cuenta
+                ldebitos = await App.DBase.obtenerTransferenciasCuenta(3, listccuenta[0]); //trae las transferencias que tengan que ver con esta cuenta
+
+                for (int i = 0; i < lcreditos.Count; i++) { entrado += await normalizarMoneda(moneda, lcreditos[i]); }
                 for (int i = 0; i < ldebitos.Count; i++) { salido += await normalizarMoneda(moneda, ldebitos[i]); }
+
+                var cuenta2 = await App.DBase.obtenerCuenta(listccuenta[1]);
+                moneda2 = cuenta2.Moneda;
+
+                lcreditos2 = await App.DBase.obtenerTransferenciasCuenta(2, listccuenta[1]); //trae las transferencias que tengan que ver con esta cuenta
+                ldebitos2 = await App.DBase.obtenerTransferenciasCuenta(3, listccuenta[1]); //trae las transferencias que tengan que ver con esta cuenta
+
+                for (int i = 0; i < lcreditos2.Count; i++) { entrado2 += await normalizarMoneda(moneda2, lcreditos2[i]); }
+                for (int i = 0; i < ldebitos2.Count; i++) { salido2 += await normalizarMoneda(moneda2, ldebitos2[i]); }
+
+                if(moneda == "USD") { entrado = entrado * pdolar.Precio; salido = salido * pdolar.Precio; }
+                if (moneda2 == "USD") {
+                    entrado2 = entrado2 * pdolar.Precio;
+                    salido2 = salido2 * pdolar.Precio;
+                }
             }
 
-            txtdinet.Text = moneda + " " + string.Format("{0:C}", entrado).Replace("$", string.Empty);
-            txtdinst.Text = moneda + " " + string.Format("{0:C}", salido).Replace("$", string.Empty);
-            txtentradast.Text = "" + lcreditos.Count;
-            txtsalidast.Text = "" + ldebitos.Count;
+            txtdinet.Text = moneda + " " + string.Format("{0:C}", (entrado+entrado2)).Replace("$", string.Empty);
+            txtdinst.Text = moneda + " " + string.Format("{0:C}", (salido + salido2)).Replace("$", string.Empty);
+            txtentradast.Text = "" + (lcreditos.Count + lcreditos2.Count);
+            txtsalidast.Text = "" + (ldebitos.Count + ldebitos2.Count);
         }
 
         public async Task<double> normalizarMoneda(string moneda, Transferencia transferencia)

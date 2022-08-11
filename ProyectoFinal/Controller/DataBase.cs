@@ -39,6 +39,19 @@ namespace ProyectoFinal.Controller
             }
         }
 
+        public async Task<int> ListaUsuarioSave(List<Usuario> usuario)
+        {
+            for (int i = 0; i < usuario.Count; i++)
+            {
+                var user = await obtenerUsuario(2, usuario[i].NombreUsuario);
+
+                if(user == null) { await dbase.InsertAsync(usuario[i]); }
+                else { await dbase.UpdateAsync(usuario[i]); }
+            }
+
+            return 1;
+        }
+
         // Read
         public Task<List<Usuario>> obtenerListaUsuario()
         {
@@ -52,6 +65,7 @@ namespace ProyectoFinal.Controller
             //2 Obtener usuario por nombre de usuario
             //3 Obtener usuario por correo electrónico
             //4 obtener usuario por id de cliente
+            //5 obtener usuario por numero de identidad
 
 
 
@@ -73,6 +87,10 @@ namespace ProyectoFinal.Controller
                 case 4:
                     return dbase.Table<Usuario>()
                     .Where(i => i.IdCliente == dato)
+                    .FirstOrDefaultAsync();
+                case 5:
+                    return dbase.Table<Usuario>()
+                    .Where(i => i.NumeroIdentidad == dato)
                     .FirstOrDefaultAsync();
             }
 
@@ -185,11 +203,24 @@ namespace ProyectoFinal.Controller
         }
 
         // Trae las cuentas ligadas a un Id de Usuario
-        public Task<List<Cuenta>> obtenerCuentasUsuario(int uid)
+        public Task<List<Cuenta>> obtenerCuentasUsuario(string nidentidad)
         {
             return dbase.Table<Cuenta>()
-                    .Where(i => i.CodigoUsuario == uid)
+                    .Where(i => i.CodigoUsuario == nidentidad)
                     .ToListAsync();
+        }
+
+        public async Task<int> ListaCuentasSave(List<Cuenta> cuentas)
+        {
+            for (int i = 0; i < cuentas.Count; i++)
+            {
+                var cuenta = await obtenerCuenta(cuentas[i].CodigoCuenta);
+
+                if (cuenta == null) { await dbase.InsertAsync(cuentas[i]); }
+                else { await dbase.UpdateAsync(cuentas[i]); }
+            }
+
+            return 1;
         }
 
         // Delete
@@ -210,6 +241,20 @@ namespace ProyectoFinal.Controller
         public Task<int> TransferenciaSave(Transferencia transferencia)
         {
             return dbase.InsertAsync(transferencia);
+        }
+
+        public async Task<int> ListaTransferenciaSave(List<Transferencia> transferencias)
+        {
+            for (int i = 0; i < transferencias.Count; i++)
+            {
+                var transferencia = await obtenerTransferencia(transferencias[i].Id);
+
+                if (transferencia == null) { await dbase.InsertAsync(transferencias[i]); }
+                else { await dbase.UpdateAsync(transferencias[i]); }
+            }
+
+
+            return 1;
         }
 
         // Read un registro

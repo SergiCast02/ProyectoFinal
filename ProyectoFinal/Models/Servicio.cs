@@ -21,5 +21,9 @@ namespace ProyectoFinal.Models
         public string Descripcion { get; set; }
         [JsonProperty("imagen")]
         public byte[] Imagen { get; set; }
+        [JsonProperty("tipo")]
+        public int Tipo { get; set; }
+        [JsonProperty("precio")]
+        public double Precio { get; set; }
     }
 }

@@ -7,10 +7,7 @@
 
     <StackLayout>
 
-        <ActivityIndicator IsRunning="True" x:Name="activityindicator"
-                   VerticalOptions="CenterAndExpand" />
-        
-        <StackLayout x:Name="_pagecontent" IsVisible="False">
+        <StackLayout x:Name="_pagecontent" IsVisible="True">
             <Label Text="STAR BANK"/>
 
 

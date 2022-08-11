@@ -8,6 +8,7 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 using ProyectoFinal.Models;
 using ProyectoFinal.Api;
+using Acr.UserDialogs;
 
 namespace ProyectoFinal.Views
 {
@@ -23,10 +24,6 @@ namespace ProyectoFinal.Views
 
             pusuario = usuario;
             pdolar = dolar;
-
-            imgusuario.Source = ImageSource.FromStream(() => new System.IO.MemoryStream(usuario.Fotografia));
-            txtnombrecompleto.Text = usuario.NombreCompleto;
-            txtnombreusuario.Text = usuario.NombreUsuario;
         }
 
         protected override bool OnBackButtonPressed()
@@ -36,8 +33,34 @@ namespace ProyectoFinal.Views
 
         protected override async void OnAppearing()
         {
+            UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
+
+            try
+            {
+                await App.DBase.ListaTransferenciaSave(await TransferenciaApi.GetTransferencias());
+            }
+            catch (Exception error)
+            {
+
+            }
+
+            try
+            {
+                await App.DBase.ListaCuentasSave(await CuentaApi.GetAllCuentas());
+            }
+            catch (Exception error)
+            {
+
+            }
+            
+            imgusuario.Source = ImageSource.FromStream(() => new System.IO.MemoryStream(pusuario.Fotografia));
+            txtnombrecompleto.Text = pusuario.NombreCompleto;
+            txtnombreusuario.Text = pusuario.NombreUsuario;
+
             preciodolarc.Text = string.Format("{0:f4}", pdolar.Compra);
             preciodolarv.Text = string.Format("{0:f4}", pdolar.Venta);
+
+            UserDialogs.Instance.HideLoading();
         }
 
         private async void btncuentas_Clicked(object sender, EventArgs e)

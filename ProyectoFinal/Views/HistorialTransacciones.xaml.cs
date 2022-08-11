@@ -107,11 +107,29 @@ namespace ProyectoFinal.Views
                 else
                 {
                     var cuenta = await App.DBase.obtenerCuenta(lista[i].Recibe);
-                    var usuario = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario);
 
-                    detalle.imagen = "arrowright.png";
-                    detalle.color = "#e81313";
-                    detalle.concepto = "Transferencia a " + usuario.NombreCompleto;
+                    if(cuenta != null)
+                    {
+                        var usuario = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario);
+
+                        detalle.imagen = "arrowright.png";
+                        detalle.color = "#e81313";
+                        detalle.concepto = "Transferencia a " + usuario.NombreCompleto;
+                    }
+                    else
+                    {
+                        detalle.imagen = "arrowright.png";
+                        detalle.color = "#e81313";
+
+                        string nombre = "";
+                        if(lista[i].Recibe == "servicioID1") { nombre = "Empresa Energía Honduras"; }
+                        if (lista[i].Recibe == "servicioID2") { nombre = "Servicio de Agua Potable"; }
+
+                        detalle.concepto = "Transferencia a " + nombre;
+                    }
+                    
+
+                    
                 }
 
                 detalle.accion = lista[i].Accion;

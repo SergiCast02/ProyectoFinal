@@ -10,6 +10,7 @@ using Xamarin.Forms.Xaml;
 using ProyectoFinal.Models;
 using System.Net.Mail;
 using ProyectoFinal.Api;
+using Acr.UserDialogs;
 
 namespace ProyectoFinal.Views
 {
@@ -137,14 +138,17 @@ namespace ProyectoFinal.Views
                     }
 
                     var resultado = await App.DBase.CuentaSave(2, cuenta);
+                    await CuentaApi.UpdateCuenta(cuenta);
 
                     if (resultado == 1) { 
                         pcuenta.Saldo -= double.Parse(monto.Text); //No se hace ninguna conversion en la reduccion del saldo de la cuenta (actualizaciond e estado luego de la transaccion) porque se valida en el picker que la moneda ingresada sea igual a la de la cuenta
                         var resultado2 = await App.DBase.CuentaSave(2, pcuenta);
+                        await CuentaApi.UpdateCuenta(pcuenta);
 
-                        if(resultado2 == 1)
+                        if (resultado2 == 1)
                         {
                             await App.DBase.TransferenciaSave(transferencia);
+                            await TransferenciaApi.CreateTransferencia(transferencia);
 
 
                             var persistencia = new Persistencia();
@@ -171,12 +175,11 @@ namespace ProyectoFinal.Views
                                 }
                             }
 
-                            var debitante = await App.DBase.obtenerUsuario(1, "" + pcuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
-                            var acreditante = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
+                            var debitante = await App.DBase.obtenerUsuario(5, "" + pcuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
+                            var acreditante = await App.DBase.obtenerUsuario(5, "" + cuenta.CodigoUsuario); //CodigoUsuario es el Id de la tabla Usuario
 
                             if (chkcorreo.IsChecked) { enviarcorreo(debitante, acreditante, pcuenta, cuenta, transferencia); }
-
-                            await DisplayAlert("Aviso", "¡Transferencia realizada con éxito!", "OK");
+                            
                             await Navigation.PushAsync(new Tablero(pusuario, pdolar));
                         }
                     }
@@ -194,6 +197,7 @@ namespace ProyectoFinal.Views
         #region Enviar e-mail
         async void enviarcorreo(Usuario usuariod, Usuario usuarioa, Cuenta cuentad, Cuenta cuentaa, Transferencia transferencia)
         {
+            UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
             try
             {
                 string valortransferencia = string.Format("{0:C}", transferencia.Valor).Replace("$", string.Empty);
@@ -218,6 +222,8 @@ namespace ProyectoFinal.Views
             {
                 DisplayAlert("Mensaje del Programador", ex.Message, "OK");
             }
+            UserDialogs.Instance.HideLoading();
+            await DisplayAlert("Aviso", "¡Transferencia realizada con éxito!", "OK");
         }
         #endregion
 

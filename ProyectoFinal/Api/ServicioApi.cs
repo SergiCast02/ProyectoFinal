@@ -8,25 +8,24 @@ using ProyectoFinal.Models;
 
 namespace ProyectoFinal.Api
 {
-    public class PrecioDolar
+    public class ServicioApi
     {
         //private static readonly string URL_SITIOS = "https://pm2examen2.000webhostapp.com/apiproyecto/";
         private static readonly string URL_SITIOS = "https://transportweb2.online/apimovil/";
         private static HttpClient client = new HttpClient();
 
-        public static async Task<Dolar> GetPrecioDolar(string fecha)
+        public static async Task<List<Servicio>> GetAllServicios()
         {
-            List<Dolar> precio = new List<Dolar>();
-
+            List<Servicio> ListaServicios = new List<Servicio>();
             try
             {
-                var uri = new Uri(URL_SITIOS + "listasingleprecio.php?fecha='"+fecha+"'");
+                var uri = new Uri(URL_SITIOS + "listaservicio.php");
                 var response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
-                    precio = JsonConvert.DeserializeObject<List<Dolar>>(content);
-                    return precio[0];
+                    ListaServicios = JsonConvert.DeserializeObject<List<Servicio>>(content);
+                    return ListaServicios;
                 }
 
             }
@@ -35,22 +34,22 @@ namespace ProyectoFinal.Api
                 Console.WriteLine(ex.Message);
             }
 
-            return precio[0];
+            return ListaServicios;
         }
 
-        public static async Task<List<Dolar>> GetListaPrecioDolar()
+        public static async Task<Servicio> GetSingleServicio(int id)
         {
-            List<Dolar> precios = new List<Dolar>();
+            List<Servicio> Servicio = new List<Servicio>();
 
             try
             {
-                var uri = new Uri(URL_SITIOS + "listaprecio.php");
+                var uri = new Uri(URL_SITIOS + "listasingleservicio.php?id="+id);
                 var response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
                     var content = response.Content.ReadAsStringAsync().Result;
-                    precios = JsonConvert.DeserializeObject<List<Dolar>>(content);
-                    return precios;
+                    Servicio = JsonConvert.DeserializeObject<List<Servicio>>(content);
+                    return Servicio[0];
                 }
 
             }
@@ -59,7 +58,8 @@ namespace ProyectoFinal.Api
                 Console.WriteLine(ex.Message);
             }
 
-            return precios;
+            return Servicio[0];
         }
+
     }
 }

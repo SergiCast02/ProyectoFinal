@@ -9,6 +9,7 @@ using Xamarin.Forms.Xaml;
 
 using ProyectoFinal.Models;
 using ProyectoFinal.Api;
+using Acr.UserDialogs;
 
 namespace ProyectoFinal.Views
 {
@@ -28,6 +29,12 @@ namespace ProyectoFinal.Views
 
         protected override async void OnAppearing()
         {
+            UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
+
+            await App.DBase.ListaTransferenciaSave(await TransferenciaApi.GetTransferencias());
+
+            UserDialogs.Instance.HideLoading();
+
             if (pcuenta.Tipo == "ahorro") { txttipocuenta.Text = "Cuenta de ahorros"; }
             txtmoneda.Text = pcuenta.Moneda;
             txtsaldo.Text = string.Format("{0:C}", pcuenta.Saldo).Replace("$", string.Empty);

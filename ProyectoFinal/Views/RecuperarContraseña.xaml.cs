@@ -11,6 +11,7 @@ using ProyectoFinal.Models;
 using System.Net.Mail;
 using Acr.UserDialogs;
 using System.ComponentModel.DataAnnotations;
+using ProyectoFinal.Api;
 
 namespace ProyectoFinal.Views
 {
@@ -44,8 +45,12 @@ namespace ProyectoFinal.Views
                 if(usuario.CodigoVerificacion == "")
                 {
                     usuario.ContraseñaTemporal = CodigoAleatorio();
-                    await App.DBase.UsuarioSave(usuario); //Se inserta (actualiza el usuario) la contraseña temporal en la base de datos
+
+                    UserDialogs.Instance.ShowLoading("Procesando solicitud", MaskType.Clear);
+                    await App.DBase.UsuarioSave(usuario);
+                    await UsuarioApi.UpdateUsuario(usuario);
                     enviarcorreo(usuario);
+                    UserDialogs.Instance.HideLoading();
                     await DisplayAlert("Envío exitoso", "Revisa tu bandeja de entrada y sigue las instrucciones para habilitar tu nueva contraseña.", "OK");
                     await Navigation.PopAsync();
                 }

@@ -12,6 +12,7 @@ using System.Net.Mail;
 using ProyectoFinal.Models;
 using ProyectoFinal.Api;
 using System.ComponentModel.DataAnnotations;
+using Acr.UserDialogs;
 
 namespace ProyectoFinal.Views
 {
@@ -28,6 +29,18 @@ namespace ProyectoFinal.Views
              usuariocompleto = usuario;
         }
 
+        protected override async void OnAppearing()
+        {
+            try
+            {
+                await App.DBase.ListaUsuarioSave(await UsuarioApi.GetAllUsuarios());
+            }
+            catch (Exception error)
+            {
+
+            }
+        }
+
         private async void btnregistrarme(object sender, EventArgs e)
         {
 
@@ -36,7 +49,9 @@ namespace ProyectoFinal.Views
                 if (txtnumeroidentidad.Text == null || txtnumeroidentidad.Text == "")
                 {
                     await DisplayAlert("Aviso", "Su número de identidad es requerido para poder aperturar su cuenta de usuario", "OK"); return;
-                }else if(txtnumeroidentidad.Text.Length < 13)
+                } else if (await App.DBase.obtenerUsuario(5, txtnumeroidentidad.Text) != null) {
+                    await DisplayAlert("Aviso", "Su número de identidad pertenece a otra cuenta de usuario", "OK"); return;
+                } else if (txtnumeroidentidad.Text.Length < 13)
                 {
                     await DisplayAlert("Aviso", "El número de identidad no está escrito correctamente.\n\nFaltan dígitos", "OK"); return;
                 }
@@ -45,11 +60,20 @@ namespace ProyectoFinal.Views
                 {
                     await DisplayAlert("Aviso", "Su nombre de usuario es requerido para poder aperturar su cuenta de usuario", "OK"); return;
                 }
+                else if (await App.DBase.obtenerUsuario(2, txtusuario.Text) != null)
+                {
+                    await DisplayAlert("Aviso", "El nombre de usuario pertenece a otra cuenta", "OK"); return;
+                }
 
                 if (txtemail.Text == null || txtemail.Text == "")
                 {
                     await DisplayAlert("Aviso", "Ingrese su correo electrónico para poder aperturar su cuenta de usuario.\n\nEnviaremos un código de verificación a este correo que usted ingrese.", "OK"); return;
-                }else if(!validateEmail(txtemail.Text))
+                }
+                else if (await App.DBase.obtenerUsuario(3, txtemail.Text) != null)
+                {
+                    await DisplayAlert("Aviso", "El correo electrónico pertenece a otra cuenta de usuario", "OK"); return;
+                }
+                else if(!validateEmail(txtemail.Text))
                 {
                     await DisplayAlert("Aviso", "El correo electrónico que ha ingresado no es válido", "OK"); return;
                 }
@@ -101,12 +125,15 @@ namespace ProyectoFinal.Views
 
                 if (usuariosqlite == null)
                 {
+                    UserDialogs.Instance.ShowLoading("Creando usuario", MaskType.Clear);
                     //guardar en API
                     bool apiresult = await UsuarioApi.CreateUsuario(usuariocompleto);
                     //guardar en SQLite
                     var result = await App.DBase.UsuarioSave(usuariocompleto);
                     persistenciaSUsuario(usuariocompleto);
                     enviarcorreo(usuariocompleto);
+                    UserDialogs.Instance.HideLoading();
+
                     await DisplayAlert("Registro Completado", "Hemos enviado un código de verificación a su correo electrónico que se le solicitará únicamente la primera vez que entre a su cuenta.", "OK");
                     for (var counter = 1; counter < 2; counter++) //2 es el numero de paginas a retroceder
                     {

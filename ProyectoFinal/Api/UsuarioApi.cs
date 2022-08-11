@@ -10,7 +10,8 @@ namespace ProyectoFinal.Api
 {
     public class UsuarioApi
     {
-        private static readonly string URL_SITIOS = "https://pm2examen2.000webhostapp.com/apiproyecto/";
+        //private static readonly string URL_SITIOS = "https://pm2examen2.000webhostapp.com/apiproyecto/";
+        private static readonly string URL_SITIOS = "https://transportweb2.online/apimovil/";
         private static HttpClient client = new HttpClient();
 
         public static async Task<List<Usuario>> GetAllUsuarios()
@@ -18,7 +19,7 @@ namespace ProyectoFinal.Api
             List<Usuario> ListaUsuarios = new List<Usuario>();
             try
             {
-                var uri = new Uri(URL_SITIOS + "listausuarios.php");
+                var uri = new Uri(URL_SITIOS + "listausuario.php");
                 var response = await client.GetAsync(uri);
                 if (response.IsSuccessStatusCode)
                 {
@@ -34,6 +35,29 @@ namespace ProyectoFinal.Api
             }
 
             return ListaUsuarios;
+        }
+
+        public static async Task<Usuario> GetUsuario(Usuario usuario)
+        {
+            List<Usuario> ListaUsuarios = new List<Usuario>();
+            try
+            {
+                var uri = new Uri(URL_SITIOS + "listasingleusuario.php?nidentidad="+usuario.NumeroIdentidad);
+                var response = await client.GetAsync(uri);
+                if (response.IsSuccessStatusCode)
+                {
+                    var content = response.Content.ReadAsStringAsync().Result;
+                    ListaUsuarios = JsonConvert.DeserializeObject<List<Usuario>>(content);
+                    return ListaUsuarios[0];
+                }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return ListaUsuarios[0];
         }
 
         public async static Task<bool> DeleteUsuario(string id)
@@ -80,12 +104,12 @@ namespace ProyectoFinal.Api
         }
 
 
-        public async static Task<bool> UpdateUsuario(Usuario sitio)
+        public async static Task<bool> UpdateUsuario(Usuario usuario)
         {
             try
             {
-                Uri requestUri = new Uri(URL_SITIOS + "actualizarsitio.php");
-                var jsonObject = JsonConvert.SerializeObject(sitio);
+                Uri requestUri = new Uri(URL_SITIOS + "actualizarusuario.php");
+                var jsonObject = JsonConvert.SerializeObject(usuario);
                 var content = new StringContent(jsonObject, Encoding.UTF8, "application/json");
                 //var response = await client.PutAsync(requestUri, content);
                 var response = await client.PostAsync(requestUri, content);

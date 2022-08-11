@@ -8,6 +8,8 @@ using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
 
 using ProyectoFinal.Models;
+using Acr.UserDialogs;
+using ProyectoFinal.Api;
 
 namespace ProyectoFinal.Views
 {
@@ -18,8 +20,11 @@ namespace ProyectoFinal.Views
         Dolar pdolar;
         int operacion = 0;
 
+        Models.Servicio pservicio;
+
         //0 pagina normal por defecto (dirige a administracion de cuenta)
         //1 seleccionar cuenta para redirigir a la pantalla Transferencias
+        //2 seleccionar cuenta para redirigir a la pantalla Servicio
 
         public Cuentas(Usuario usuario, Dolar dolar)
         {
@@ -39,9 +44,34 @@ namespace ProyectoFinal.Views
             pdolar = dolar;
         }
 
+        public Cuentas(Usuario usuario, int op, Dolar dolar, Models.Servicio servicio)
+        {
+            InitializeComponent();
+            pusuario = usuario;
+            operacion = op;
+            btnvolver.IsVisible = false;
+            btncrearcuenta.IsVisible = true;
+            pservicio = servicio;
+
+            pdolar = dolar;
+        }
+
         protected override async void OnAppearing()
         {
-            var cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            try
+            {
+                UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
+
+                await App.DBase.ListaCuentasSave(await CuentaApi.GetAllCuentas());
+
+                UserDialogs.Instance.HideLoading();
+            }
+            catch (Exception error)
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
+            var cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.NumeroIdentidad);
 
             List<_cuenta> _cuentas = new List<_cuenta>();
 
@@ -61,7 +91,7 @@ namespace ProyectoFinal.Views
 
         private async void btncreacuenta_Clicked(object sender, EventArgs e)
         {
-            var resultado = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            var resultado = await App.DBase.obtenerCuentasUsuario(pusuario.NumeroIdentidad);
 
             if (resultado.Count >= 2)
             {
@@ -93,6 +123,10 @@ namespace ProyectoFinal.Views
             else if (operacion == 1)
             {
                 await Navigation.PushAsync(new Transferencias(pusuario, cuenta, pdolar));
+            }
+            else if (operacion == 2)
+            {
+                await Navigation.PushAsync(new Servicio(pusuario, pservicio, pdolar, cuenta));
             }
         }
     }

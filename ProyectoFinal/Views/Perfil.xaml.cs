@@ -1,8 +1,10 @@
 ﻿using Acr.UserDialogs;
+using Plugin.Media;
 using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -15,6 +17,10 @@ namespace ProyectoFinal.Views
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class Perfil : ContentPage
     {
+        Plugin.Media.Abstractions.MediaFile FileFoto = null;
+        byte[] FileFotoBytes = null;
+
+
         Usuario pusuario;
         public Perfil()
         {
@@ -102,13 +108,12 @@ namespace ProyectoFinal.Views
                 perfilmodificar();
             }
             else {
-                perfilnormal();
-
                 if (!validateEmail(entryemail.Text))
                 {
                     await DisplayAlert("Aviso", "El correo electrónico que ha ingresado no es válido", "OK"); return;
                 }
 
+                pusuario.Fotografia = FileFotoBytes;
                 pusuario.Email = entryemail.Text;
                 pusuario.Sexo = sexo.Text;
                 pusuario.Direccion = direccion.Text;
@@ -117,6 +122,7 @@ namespace ProyectoFinal.Views
 
                 if (result==1) { await DisplayAlert("Actualizado", "Tus datos se han actualizado correctamente", "OK"); }
 
+                perfilnormal();
                 recargar();
             }
 
@@ -246,7 +252,7 @@ namespace ProyectoFinal.Views
             nombreusuario.Text = pusuario.NombreUsuario;
             idcliente.Text = pusuario.IdCliente;
 
-            var cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            var cuentas = await App.DBase.obtenerCuentasUsuario(pusuario.NumeroIdentidad);
             cuentasaperturadas.Text = "" + cuentas.Count;
 
             email.Text = pusuario.Email;
@@ -326,6 +332,86 @@ namespace ProyectoFinal.Views
 
                 return false;
             }
+        }
+
+        private async void imgpersona_Tapped(object sender, EventArgs e)
+        {
+            if (btneditar.Text != "LISTO") { return; }
+
+            string action = await DisplayActionSheet("Obtener fotografía", "Cancelar", null, "Seleccionar de galería", "Tomar foto");
+
+            if (action == "Seleccionar de galería") { seleccionarfoto(); }
+            if (action == "Tomar foto") { tomarfoto(); }
+        }
+
+        private async void tomarfoto()
+        {
+            FileFoto = await CrossMedia.Current.TakePhotoAsync(new Plugin.Media.Abstractions.StoreCameraMediaOptions
+            {
+                Directory = "Fotos_starbank",
+                Name = "fotografia.jpg",
+                SaveToAlbum = true
+            });
+            // await DisplayAlert("Path directorio", FileFoto.Path, "OK");
+
+
+            if (FileFoto != null)
+            {
+                imgusuario.Source = ImageSource.FromStream(() =>
+                {
+                    return FileFoto.GetStream();
+                });
+
+                //Pasamos la foto a imagen a byte[] almacenandola en FileFotoBytes
+                using (System.IO.MemoryStream memory = new MemoryStream())
+                {
+                    Stream stream = FileFoto.GetStream();
+                    stream.CopyTo(memory);
+                    FileFotoBytes = memory.ToArray();
+                    /*string base64Val = Convert.ToBase64String(FileFotoBytes);
+                    FileFotoBytes = Convert.FromBase64String(base64Val);*/
+                }
+            }
+        }
+
+        private async void seleccionarfoto()
+        {
+            /*if (!CrossMedia.Current.IsPickPhotoSupported)
+            {
+                await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                return;
+            }*/
+
+            FileFoto = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
+            {
+                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+            });
+
+
+            if (FileFoto == null)
+                return;
+
+            imgusuario.Source = ImageSource.FromStream(() =>
+            {
+                return FileFoto.GetStream();
+            });
+
+            //Pasamos la foto a imagen a byte[] almacenandola en FileFotoBytes
+            using (System.IO.MemoryStream memory = new MemoryStream())
+            {
+                Stream stream = FileFoto.GetStream();
+                stream.CopyTo(memory);
+                FileFotoBytes = memory.ToArray();
+                /*string base64Val = Convert.ToBase64String(FileFotoBytes);
+                FileFotoBytes = Convert.FromBase64String(base64Val);*/
+            }
+
+            /*Imagen.Source = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                file.Dispose();
+                return stream;
+            });*/
         }
     }
 }

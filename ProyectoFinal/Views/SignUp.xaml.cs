@@ -37,9 +37,12 @@ namespace ProyectoFinal.Views
         }
 
 
-        private void imgpersona_Tapped(object sender, EventArgs e)
+        private async void imgpersona_Tapped(object sender, EventArgs e)
         {
-            tomarfoto();
+            string action = await DisplayActionSheet("Obtener fotografía", "Cancelar", null, "Seleccionar de galería", "Tomar foto");
+            
+            if(action == "Seleccionar de galería") { seleccionarfoto(); }
+            if(action == "Tomar foto") { tomarfoto(); }
         }
 
 
@@ -131,6 +134,46 @@ namespace ProyectoFinal.Views
                     FileFotoBytes = Convert.FromBase64String(base64Val);*/
                 }
             }
+        }
+
+        private async void seleccionarfoto()
+        {
+            /*if (!CrossMedia.Current.IsPickPhotoSupported)
+            {
+                await DisplayAlert("Photos Not Supported", ":( Permission not granted to photos.", "OK");
+                return;
+            }*/
+
+            FileFoto = await Plugin.Media.CrossMedia.Current.PickPhotoAsync(new Plugin.Media.Abstractions.PickMediaOptions
+            {
+                PhotoSize = Plugin.Media.Abstractions.PhotoSize.Medium,
+            });
+
+
+            if (FileFoto == null)
+                return;
+
+            imgpersona.Source = ImageSource.FromStream(() =>
+            {
+                return FileFoto.GetStream();
+            });
+
+            //Pasamos la foto a imagen a byte[] almacenandola en FileFotoBytes
+            using (System.IO.MemoryStream memory = new MemoryStream())
+            {
+                Stream stream = FileFoto.GetStream();
+                stream.CopyTo(memory);
+                FileFotoBytes = memory.ToArray();
+                /*string base64Val = Convert.ToBase64String(FileFotoBytes);
+                FileFotoBytes = Convert.FromBase64String(base64Val);*/
+            }
+
+            /*Imagen.Source = ImageSource.FromStream(() =>
+            {
+                var stream = file.GetStream();
+                file.Dispose();
+                return stream;
+            });*/
         }
 
         

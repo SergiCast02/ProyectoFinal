@@ -20,13 +20,23 @@ namespace ProyectoFinal.Views
         public LogIn()
         {
             InitializeComponent();
-            actualizarDolar();
-            activityindicator.IsVisible = false;
-            _pagecontent.IsVisible = true;
         }
 
         protected async override void OnAppearing()
         {
+            try
+            {
+                UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
+
+                await App.DBase.ListaUsuarioSave(await UsuarioApi.GetAllUsuarios());
+
+                UserDialogs.Instance.HideLoading();
+            }
+            catch (Exception error)
+            {
+                UserDialogs.Instance.HideLoading();
+            }
+
             chkrecordarc.IsChecked = true;
 
             try
@@ -55,16 +65,22 @@ namespace ProyectoFinal.Views
             
         }
 
-        async void actualizarDolar()
+        async Task<bool> actualizarDolar()
         {
+            UserDialogs.Instance.ShowLoading("Obteniendo datos", MaskType.Clear);
             try
             {
                 var listaprecios = await PrecioDolar.GetListaPrecioDolar();
-                App.DBase.DolarSave(listaprecios);
+                if (listaprecios.Count == 0) { await DisplayAlert("Aviso", "Ha ocurrido un error con el servidor, vuelva a intentarlo", "OK"); UserDialogs.Instance.HideLoading();  return false; }
+                else
+                {
+                    App.DBase.DolarSave(listaprecios);
+                }
             }
             catch (Exception error)
             {
-
+                await DisplayAlert("Aviso", "Ha ocurrido un error con el servidor, vuelva a intentarlo.", "OK");
+                return false;
             }
 
             try
@@ -76,8 +92,13 @@ namespace ProyectoFinal.Views
             }
             catch (Exception error)
             {
-
+                await DisplayAlert("Aviso", "Ha ocurrido un error con el servidor, vuelva a intentarlo.", "OK");
+                return false;
             }
+
+            UserDialogs.Instance.HideLoading();
+
+            return true;
         }
 
         private async void goRecuperarContraseña(object sender, EventArgs e)
@@ -92,6 +113,8 @@ namespace ProyectoFinal.Views
 
         private async void btningresar(object sender, EventArgs e)
         {
+            if (!await actualizarDolar()) { return; }
+
             try
             {
                 if(txtusuario.Text == null || txtusuario.Text == "") { await DisplayAlert("Aviso", "Ingrese un usuario", "OK"); return; }
@@ -115,6 +138,13 @@ namespace ProyectoFinal.Views
                             else { persistenciaSUsuario(2, usuario); }
 
                             await DisplayAlert("Aviso", "Bienvenido de vuelta: " + usuario.NombreCompleto, "OK");
+
+                            UserDialogs.Instance.ShowLoading("cargando tus datos...", MaskType.Clear);
+
+                            usuario = await UsuarioApi.GetUsuario(usuario);
+
+                            UserDialogs.Instance.HideLoading();
+
                             await Navigation.PushAsync(new Tablero(usuario, dolar));
                         }
                         else if (usuario.ContraseñaTemporal == txtcontraseña.Text)
@@ -149,10 +179,15 @@ namespace ProyectoFinal.Views
                                     {
                                         if (result.Text == result2.Text)
                                         {
+                                            UserDialogs.Instance.ShowLoading("Actualizando datos", MaskType.Clear);
+                                            await App.DBase.UsuarioSave(usuario);
+                                            await UsuarioApi.UpdateUsuario(usuario);
+                                            UserDialogs.Instance.HideLoading();
+
                                             await DisplayAlert("Éxito", "Se ha restablecido su contraseña.\n\nUtilice su nueva contraseña la próxima vez que ingrese a la aplicación", "OK");
                                             usuario.Contraseña = result.Text;
                                             usuario.ContraseñaTemporal = "";
-                                            await App.DBase.UsuarioSave(usuario);
+
                                             ciclo = false;
                                         }
                                         else
@@ -208,7 +243,11 @@ namespace ProyectoFinal.Views
                                     if (result.Text == usuario.CodigoVerificacion)
                                     {
                                         usuario.CodigoVerificacion = "";
-                                        var estado = await App.DBase.UsuarioSave(usuario);
+                                        UserDialogs.Instance.ShowLoading("Actualizando datos", MaskType.Clear);
+                                        await App.DBase.UsuarioSave(usuario);
+                                        await UsuarioApi.UpdateUsuario(usuario);
+                                        UserDialogs.Instance.HideLoading();
+
 
                                         await DisplayAlert("Bienvenido", "Acabas de aperturar tu cuenta exitósamente.\n\nSerás redirigido a tu menú dentro de la aplicación.", "¡Gracias!");
                                         //Aqui pude haber creado una bool bandera pero poniendo ciclo en flase cumplo la funcion del break y de saber que ya pase por aqui

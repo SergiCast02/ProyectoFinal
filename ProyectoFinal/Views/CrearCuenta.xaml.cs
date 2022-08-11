@@ -1,4 +1,6 @@
-﻿using ProyectoFinal.Models;
+﻿using Acr.UserDialogs;
+using ProyectoFinal.Api;
+using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +33,7 @@ namespace ProyectoFinal.Views
             monedas.Add("HNL");
             monedas.Add("USD");
 
-            var ListCuentas = await App.DBase.obtenerCuentasUsuario(pusuario.Id);
+            var ListCuentas = await App.DBase.obtenerCuentasUsuario(pusuario.NumeroIdentidad);
             
             if(ListCuentas.Count != 0)
             {
@@ -53,13 +55,19 @@ namespace ProyectoFinal.Views
                 Cuenta cuenta = new Cuenta
                 {
                     CodigoCuenta = CodigoAleatorio(),
-                    CodigoUsuario = pusuario.Id,
+                    CodigoUsuario = pusuario.NumeroIdentidad,
                     Moneda = pckmoneda.SelectedItem.ToString(),
                     Saldo = double.Parse(pcksaldo.SelectedItem.ToString()),
                     Tipo = "ahorro"
                 };
 
+                UserDialogs.Instance.ShowLoading("cargando...", MaskType.Clear);
+
                 int resultado = await App.DBase.CuentaSave(1, cuenta); //1 operacion save
+                await CuentaApi.CreateCuenta(cuenta);
+
+                UserDialogs.Instance.HideLoading();
+
                 if (resultado == 0)
                 {
                     await DisplayAlert("Error", "No se ha podido crear tu cuenta debido a un error interno", "OK");
