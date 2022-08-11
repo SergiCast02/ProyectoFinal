@@ -8,7 +8,7 @@ namespace ProyectoFinal.Models
 {
     public class Transferencia
     {
-        [AutoIncrement, PrimaryKey, JsonProperty("id")]
+        [PrimaryKey, JsonProperty("id")]
         public int Id { get; set; }
         [JsonProperty("accion")]
         public string Accion { get; set; } // La accion es relativa al usuario (en si es la cuenta) que envia si debito o credito
