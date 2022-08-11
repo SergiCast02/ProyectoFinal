@@ -95,8 +95,7 @@ namespace ProyectoFinal.Views
             bool respuesta = await DisplayAlert("Cerrando sesión", "¿Realmente quieres cerrar sesión?", "Si", "No");
 
             if (respuesta) {
-                Navigation.RemovePage(Navigation.NavigationStack[1]);
-                await Navigation.PopAsync();
+                await Navigation.PushAsync(new LogIn());
                 //await Navigation.PushAsync(new LogIn());
             }
             

@@ -60,10 +60,6 @@
 
             <StackLayout>
                 <StackLayout>
-                    <Label Text="Dinero entrado: "/>
-                    <Label x:Name="txtdines"/>
-                </StackLayout>
-                <StackLayout>
                     <Label Text="Dinero salido: "/>
                     <Label x:Name="txtdinss"/>
                 </StackLayout>
@@ -73,10 +69,6 @@
                 <StackLayout>
                     <Label Text="Salidas: "/>
                     <Label x:Name="txtsalidass"/>
-                </StackLayout>
-                <StackLayout>
-                    <Label Text="Entradas: "/>
-                    <Label x:Name="txtentradass"/>
                 </StackLayout>
             </StackLayout>
 
@@ -92,10 +84,6 @@
 
             <StackLayout>
                 <StackLayout>
-                    <Label Text="Dinero entrado: "/>
-                    <Label x:Name="txtdinee"/>
-                </StackLayout>
-                <StackLayout>
                     <Label Text="Dinero salido: "/>
                     <Label x:Name="txtdinse"/>
                 </StackLayout>
@@ -106,9 +94,27 @@
                     <Label Text="Salidas: "/>
                     <Label x:Name="txtsalidase"/>
                 </StackLayout>
+            </StackLayout>
+
+        </StackLayout>
+
+
+
+
+        <StackLayout>
+
+            <StackLayout BackgroundColor="#465173">
+                <Label Text="TOTAL:" TextColor="#F2F2F2"/>
+            </StackLayout>
+
+            <StackLayout>
                 <StackLayout>
-                    <Label Text="Entradas: "/>
-                    <Label x:Name="txtentradase"/>
+                    <Label Text="Salido: "/>
+                    <Label x:Name="txtdints"/>
+                </StackLayout>
+                <StackLayout>
+                    <Label Text="Entrado: "/>
+                    <Label x:Name="txtdinte"/>
                 </StackLayout>
             </StackLayout>
 

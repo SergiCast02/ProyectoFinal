@@ -1,5 +1,6 @@
 ﻿using Acr.UserDialogs;
 using Plugin.Media;
+using ProyectoFinal.Api;
 using ProyectoFinal.Models;
 using System;
 using System.Collections.Generic;
@@ -118,7 +119,13 @@ namespace ProyectoFinal.Views
                 pusuario.Sexo = sexo.Text;
                 pusuario.Direccion = direccion.Text;
 
+                UserDialogs.Instance.ShowLoading("actualizando...", MaskType.Clear);
+
                 var result = await App.DBase.UsuarioSave(pusuario);
+                await UsuarioApi.UpdateUsuario(pusuario);
+
+                UserDialogs.Instance.HideLoading();
+
 
                 if (result==1) { await DisplayAlert("Actualizado", "Tus datos se han actualizado correctamente", "OK"); }
 
@@ -188,7 +195,14 @@ namespace ProyectoFinal.Views
                                             if (result3.Text == result2.Text)
                                             {
                                                 pusuario.Contraseña = result2.Text;
+
+                                                UserDialogs.Instance.ShowLoading("actualizando...", MaskType.Clear);
+
                                                 var resultado = await App.DBase.UsuarioSave(pusuario);
+                                                await UsuarioApi.UpdateUsuario(pusuario);
+                                                
+                                                UserDialogs.Instance.HideLoading();
+
 
                                                 if (resultado == 1) { await DisplayAlert("Éxito", "Su contraseña se ha actualizado correctamente", "OK"); }
                                                 ciclo3 = false;
@@ -248,6 +262,7 @@ namespace ProyectoFinal.Views
         {
             idcliente.Text = pusuario.IdCliente;
             imgusuario.Source = ImageSource.FromStream(() => new System.IO.MemoryStream(pusuario.Fotografia));
+            FileFotoBytes = pusuario.Fotografia;
             nombrecompleto.Text = pusuario.NombreCompleto;
             nombreusuario.Text = pusuario.NombreUsuario;
             idcliente.Text = pusuario.IdCliente;

@@ -98,7 +98,7 @@ namespace ProyectoFinal.Views
                     lista[i].Accion = "crédito";
 
                     var cuenta = await App.DBase.obtenerCuenta(lista[i].Envia);
-                    var usuario = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario);
+                    var usuario = await App.DBase.obtenerUsuario(5, "" + cuenta.CodigoUsuario);
 
                     detalle.imagen = "arrowleft.png";
                     detalle.color = "#18cf25";
@@ -110,7 +110,7 @@ namespace ProyectoFinal.Views
 
                     if(cuenta != null)
                     {
-                        var usuario = await App.DBase.obtenerUsuario(1, "" + cuenta.CodigoUsuario);
+                        var usuario = await App.DBase.obtenerUsuario(5, "" + cuenta.CodigoUsuario);
 
                         detalle.imagen = "arrowright.png";
                         detalle.color = "#e81313";
@@ -122,10 +122,14 @@ namespace ProyectoFinal.Views
                         detalle.color = "#e81313";
 
                         string nombre = "";
-                        if(lista[i].Recibe == "servicioID1") { nombre = "Empresa Energía Honduras"; }
-                        if (lista[i].Recibe == "servicioID2") { nombre = "Servicio de Agua Potable"; }
+                        if(lista[i].Recibe == "servicioID1") { nombre = "Pago de Servicio: Empresa Energía Honduras"; }
+                        else if (lista[i].Recibe == "servicioID2") { nombre = "Pago de Servicio: Servicio de Agua Potable"; }
+                        else
+                        {
+                            nombre = lista[i].Comentario;
+                        }
 
-                        detalle.concepto = "Transferencia a " + nombre;
+                        detalle.concepto =  nombre;
                     }
                     
 

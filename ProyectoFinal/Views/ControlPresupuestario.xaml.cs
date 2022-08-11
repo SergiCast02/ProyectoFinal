@@ -144,6 +144,8 @@ namespace ProyectoFinal.Views
                     entrado2 = entrado2 * pdolar.Precio;
                     salido2 = salido2 * pdolar.Precio;
                 }
+
+                moneda = "HNL ";
             }
 
             txtdinet.Text = moneda + " " + string.Format("{0:C}", (entrado+entrado2)).Replace("$", string.Empty);

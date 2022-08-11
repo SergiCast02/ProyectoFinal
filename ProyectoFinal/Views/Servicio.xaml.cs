@@ -41,7 +41,7 @@ namespace ProyectoFinal.Views
             else
             {
                 adebitar.Text = string.Format("{0:C}", servicio.Precio).Replace("$", string.Empty);
-                btntransferir.IsEnabled = true;
+                //btntransferir.IsEnabled = true;
             }
 
             pservicio = servicio;
@@ -193,15 +193,31 @@ namespace ProyectoFinal.Views
                 pcuenta.Saldo -= valor;
             }
 
-            var resultado = await App.DBase.CuentaSave(2, pcuenta);
-            await App.DBase.TransferenciaSave(transferencia);
+            UserDialogs.Instance.ShowLoading("realizando transacción...", MaskType.Clear);
 
-            pago.Pago = "si";
-            if (await PagosApi.UpdatePago(pago))
+            var resultado = await App.DBase.CuentaSave(2, pcuenta);
+            await CuentaApi.UpdateCuenta(pcuenta);
+
+            await App.DBase.TransferenciaSave(transferencia);
+            await TransferenciaApi.CreateTransferencia(transferencia);
+
+            UserDialogs.Instance.HideLoading();
+
+            if (pservicio.Id == 1 || pservicio.Id == 2)
             {
-                await DisplayAlert("Éxito", "Pago realizado con éxito", "OK");
-                await Navigation.PushAsync(new Tablero(pusuario, pdolar));
+                pago.Pago = "si";
+                if (await PagosApi.UpdatePago(pago))
+                {
+                    await DisplayAlert("Éxito", "Pago de servicio realizado con éxito", "OK");
+                    await Navigation.PushAsync(new Tablero(pusuario, pdolar));
+                }
             }
+            else
+            {
+                await DisplayAlert("Éxito", "Pago de evento realizado con éxito", "OK");
+            }
+
+            
         }
 
         private void EneroTapped(object sender, EventArgs e)
