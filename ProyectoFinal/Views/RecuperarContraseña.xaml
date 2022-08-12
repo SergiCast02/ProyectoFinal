@@ -22,7 +22,7 @@
 
 
         <Frame Padding="10" Margin="0,100,0,0" BackgroundColor="#9297A6">
-            <Label TextColor="#FFFFFF" Text="Volver" FontAttributes="Bold" FontSize="16" HorizontalOptions="CenterAndExpand">
+            <Label TextColor="#FFFFFF" Text="VOLVER" FontAttributes="Bold" FontSize="16" HorizontalOptions="CenterAndExpand">
                 
             </Label>
 

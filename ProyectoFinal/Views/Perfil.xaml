@@ -1,13 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="ProyectoFinal.Views.Perfil">
+             x:Class="ProyectoFinal.Views.Perfil"
+             NavigationPage.HasNavigationBar="False">
     <StackLayout>
 
-        <StackLayout Orientation="Horizontal">
+        <StackLayout BackgroundColor="#131D47" Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
             <!-- Volver<Image/>-->
-            <Label Text="PERFIL"/>
+            <Label TextColor="#FFFFFF" Text="PERFIL" FontSize="20" FontAttributes="Bold"/>
 
+            <ImageButton Clicked="ImageButton_Clicked" Source="home.png" HeightRequest="25" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Margin="0,0,10,0"/>
         </StackLayout>
 
         <StackLayout Orientation="Horizontal">

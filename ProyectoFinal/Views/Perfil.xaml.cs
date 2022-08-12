@@ -23,17 +23,25 @@ namespace ProyectoFinal.Views
 
 
         Usuario pusuario;
+        Dolar pdolar;
+
         public Perfil()
         {
             InitializeComponent();
         }
 
-        public Perfil(Usuario usuario)
+        public Perfil(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
             pusuario = usuario;
+            pdolar = dolar;
 
             
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
         }
 
         protected async override void OnAppearing()
@@ -429,6 +437,11 @@ namespace ProyectoFinal.Views
                 file.Dispose();
                 return stream;
             });*/
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Tablero(pusuario, pdolar));
         }
     }
 }

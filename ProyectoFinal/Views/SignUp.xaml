@@ -80,8 +80,8 @@
 
 
 
-                    <Frame Padding="10" Margin="0,100,0,0" BackgroundColor="#9297A6">
-                        <Label TextColor="#FFFFFF" Text="siguiente" FontAttributes="Bold" FontSize="16" HorizontalOptions="CenterAndExpand">
+                    <Frame Padding="10" Margin="0,100,0,0" BackgroundColor="#9297A6" CornerRadius="10">
+                        <Label TextColor="#FFFFFF" Text="SIGUIENTE" FontAttributes="Bold" FontSize="16" HorizontalOptions="CenterAndExpand">
                             
                         </Label>
 

@@ -245,10 +245,14 @@ namespace ProyectoFinal.Views
         {
             if (btnregistrar.IsEnabled)
             {
-                Navigation.RemovePage(Navigation.NavigationStack[Navigation.NavigationStack.Count - 2]);
                 await Navigation.PopAsync();
             }
             
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new LogIn());
         }
     }
 }

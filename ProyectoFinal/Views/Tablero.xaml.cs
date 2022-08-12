@@ -103,7 +103,7 @@ namespace ProyectoFinal.Views
 
         private async void perfil_Tapped(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Perfil(pusuario));
+            await Navigation.PushAsync(new Perfil(pusuario, pdolar));
         }
     }
 }

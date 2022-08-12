@@ -47,7 +47,7 @@
 
 
 
-            <Button Text="Ingresar" Clicked="btningresar"/>
+            <Button  Text="Ingresar" Clicked="btningresar"/>
 
 
 
