@@ -18,13 +18,25 @@ namespace ProyectoFinal.Views
     {
         Cuenta pcuenta;
         Usuario pusuario;
+        Dolar pdolar;
 
-        public AdministracionCuenta(Cuenta cuenta, Usuario usuario)
+        public AdministracionCuenta(Cuenta cuenta, Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
 
             pcuenta = cuenta;
             pusuario = usuario;
+            pdolar = dolar;
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Tablero(pusuario, pdolar));
         }
 
         protected override async void OnAppearing()

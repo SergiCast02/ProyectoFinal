@@ -3,27 +3,29 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoFinal.Views.AdministracionCuenta"
              NavigationPage.HasNavigationBar="False">
-    <StackLayout>
-        <StackLayout Orientation="Horizontal" BackgroundColor="#465173">
+    <StackLayout BackgroundColor="#131D47">
+        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
             <!-- Volver<Image/>-->
-            <Label Text="ADMINISTRACIÓN DE CUENTA"/>
+            <Label TextColor="#FFFFFF" FontAttributes="Bold" Text="ADMINISTRACIÓN DE CUENTAS" FontSize="20"/>
+
+            <ImageButton Clicked="ImageButton_Clicked" Source="home.png" HeightRequest="25" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Margin="0,0,10,0"/>
         </StackLayout>
 
 
 
         <StackLayout>
-            <Label x:Name="txttipocuenta"/>
+            <Label TextColor="#FFFFFF" x:Name="txttipocuenta"/>
             <StackLayout Orientation="Horizontal">
-                <Label x:Name="txtmoneda"/>
-                <Label x:Name="txtsaldo"/>
+                <Label TextColor="#FFFFFF" x:Name="txtmoneda"/>
+                <Label TextColor="#FFFFFF" x:Name="txtsaldo"/>
             </StackLayout>
-            <Label Text="Saldo Corriente"/>
+            <Label TextColor="#FFFFFF" Text="Saldo Corriente"/>
         </StackLayout>
 
 
 
         <StackLayout>
-            <Label x:Name="txtcodigocuenta"/>
+            <Label TextColor="#FFFFFF" x:Name="txtcodigocuenta"/>
         </StackLayout>
 
 
@@ -33,7 +35,7 @@
 
 
         <StackLayout>
-            <Label x:Name="txtmesactual"/>
+            <Label TextColor="#FFFFFF" x:Name="txtmesactual"/>
 
             <StackLayout>
                 <CollectionView x:Name="ListTransferenciasMes"

@@ -16,15 +16,28 @@ namespace ProyectoFinal.Views
     public partial class Soporte : ContentPage
     {
         Usuario pusuario;
+        Dolar pdolar;
 
-        public Soporte(Usuario usuario)
+        public Soporte(Usuario usuario, Dolar dolar)
         {
             InitializeComponent();
+            pusuario = usuario;
+            pdolar = dolar;
         }
 
         private async void btncorreo_Clicked(object sender, EventArgs e)
         {
             await SendEmail();
+        }
+
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Tablero(pusuario, pdolar));
         }
 
         #region SendEmail (abre la aplicación de Gmail como borrador)

@@ -87,7 +87,7 @@ namespace ProyectoFinal.Views
 
         private async void btnsoporte_Clicked(object sender, EventArgs e)
         {
-            await Navigation.PushAsync(new Soporte(pusuario));
+            await Navigation.PushAsync(new Soporte(pusuario, pdolar));
         }
 
         private async void btnlogout_Clicked(object sender, EventArgs e)

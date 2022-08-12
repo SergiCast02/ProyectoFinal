@@ -3,65 +3,81 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoFinal.Views.Cuentas"
              NavigationPage.HasNavigationBar="False">
-    <StackLayout>
-        <StackLayout Orientation="Horizontal" BackgroundColor="#465173">
+    <StackLayout BackgroundColor="#131D47">
+        <StackLayout Orientation="Horizontal" Padding="10" HorizontalOptions="Fill">
             <!-- Volver<Image/>-->
-            <Label Text="ADMINISTRACIÓN DE CUENTAS"/>
+            <Label TextColor="#FFFFFF" FontAttributes="Bold" Text="ADMINISTRACIÓN DE CUENTAS" FontSize="20"/>
+
+            <ImageButton Clicked="ImageButton_Clicked" Source="home.png" HeightRequest="25" BackgroundColor="Transparent" HorizontalOptions="EndAndExpand" Margin="0,0,10,0"/>
         </StackLayout>
 
 
 
-        <CollectionView x:Name="ListCuentas"
+        <ScrollView Padding="10">
+
+            <StackLayout Padding="5">
+
+                <StackLayout BackgroundColor="#020C36" Padding="10">
+
+                    <CollectionView x:Name="ListCuentas" HeightRequest="200"
                             Margin="20"
                             SelectionMode="Single"
                             SelectionChanged="ListCuentas_SelectionChanged">
 
-            <CollectionView.ItemsLayout>
-                <LinearItemsLayout Orientation="Vertical"
+                        <CollectionView.ItemsLayout>
+                            <LinearItemsLayout Orientation="Vertical"
                                        ItemSpacing="10"/>
-            </CollectionView.ItemsLayout>
+                        </CollectionView.ItemsLayout>
 
-            <CollectionView.ItemTemplate>
-                <DataTemplate>
-                    <StackLayout BackgroundColor="#008573">
-                        <StackLayout Orientation="Horizontal">
-                            <StackLayout>
-                                <Label Text="Cuenta de ahorros"/>
-                                <Label Text="{Binding CodigoCuenta}"/>
-                            </StackLayout>
+                        <CollectionView.ItemTemplate>
+                            <DataTemplate>
+                                <StackLayout BackgroundColor="#008573">
+                                    <StackLayout Orientation="Horizontal">
+                                        <StackLayout>
+                                            <Label Text="Cuenta de ahorros"/>
+                                            <Label Text="{Binding CodigoCuenta}"/>
+                                        </StackLayout>
 
-                            <Image Source="right.png" HeightRequest="25"/>
-                        </StackLayout>
+                                        <Image Source="right.png" HeightRequest="25"/>
+                                    </StackLayout>
 
-                        <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
-                            <Image Source="piggybank.png" HeightRequest="50" Margin="0,0,0,20"/>
+                                    <StackLayout Orientation="Horizontal" Margin="0,25,0,0">
+                                        <Image Source="piggybank.png" HeightRequest="50" Margin="0,0,0,20"/>
 
-                            <StackLayout>
-                                <Label Text="Saldo disponible"/>
-                                <StackLayout Orientation="Horizontal">
-                                    <Label Text="{Binding Moneda}"/>
-                                    <Label Text="{Binding Saldo}"/>
+                                        <StackLayout>
+                                            <Label Text="Saldo disponible"/>
+                                            <StackLayout Orientation="Horizontal">
+                                                <Label Text="{Binding Moneda}"/>
+                                                <Label Text="{Binding Saldo}"/>
+                                            </StackLayout>
+                                        </StackLayout>
+                                    </StackLayout>
                                 </StackLayout>
-                            </StackLayout>
-                        </StackLayout>
-                    </StackLayout>
-                </DataTemplate>
-            </CollectionView.ItemTemplate>
-        </CollectionView>
-        
+                            </DataTemplate>
+                        </CollectionView.ItemTemplate>
+                    </CollectionView>
 
 
-        <Button Clicked="btncreacuenta_Clicked"
+
+                    <Button Clicked="btncreacuenta_Clicked"
                 x:Name="btncrearcuenta"
                 Text="Crear nueva cuenta de ahorros"
+                        TextColor="#FFFFFF"
                 HorizontalOptions="CenterAndExpand"
                 BackgroundColor="#465173"/>
+
+                </StackLayout>
+
+            </StackLayout>
+            
+        </ScrollView>
 
 
 
         <Button Clicked="btnvolver_Clicked"
                 x:Name="btnvolver"
                 Text="VOLVER"
+                VerticalOptions="EndAndExpand"
                 BackgroundColor="#9297A6"
                 TextColor="#F2F2F2"/>
     </StackLayout>

@@ -56,6 +56,16 @@ namespace ProyectoFinal.Views
             pdolar = dolar;
         }
 
+        protected override bool OnBackButtonPressed()
+        {
+            return true;
+        }
+
+        private async void ImageButton_Clicked(object sender, EventArgs e)
+        {
+            await Navigation.PushAsync(new Tablero(pusuario, pdolar));
+        }
+
         protected override async void OnAppearing()
         {
             try
@@ -118,7 +128,7 @@ namespace ProyectoFinal.Views
 
             if (operacion == 0)
             {
-                await Navigation.PushAsync(new AdministracionCuenta(cuenta, pusuario));
+                await Navigation.PushAsync(new AdministracionCuenta(cuenta, pusuario, pdolar));
             }
             else if (operacion == 1)
             {

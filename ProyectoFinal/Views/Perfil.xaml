@@ -17,7 +17,7 @@
             <Button Text="editar" x:Name="btneditar" Clicked="btneditar_Clicked"/>
         </StackLayout>
 
-        <ScrollView>
+        <ScrollView Padding="10">
 
             <StackLayout Margin="0, 10, 0, 25">
                 
@@ -41,7 +41,7 @@
                 <Label x:Name="nombrecompleto" FontAttributes="Bold" HorizontalOptions="Center"/>
 
 
-                <Frame
+                <Frame Margin="0,10,0,0"
             CornerRadius="10">
                     <StackLayout Orientation="Horizontal">
                         <Label Text="Usuario: "/>
